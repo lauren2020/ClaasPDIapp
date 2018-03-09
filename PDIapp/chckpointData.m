@@ -1,0 +1,1 @@
+func checkpointsArray(){,var checkpoint1,checkpoint1 = 1,var checkpoint2 = 2,}
