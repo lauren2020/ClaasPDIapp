@@ -14,6 +14,53 @@
 		80126D46202E413600B3CFAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80126D44202E413600B3CFAB /* LaunchScreen.storyboard */; };
 		80126D51202E413600B3CFAB /* PDIappTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126D50202E413600B3CFAB /* PDIappTests.swift */; };
 		80126D5C202E413600B3CFAB /* PDIappUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126D5B202E413600B3CFAB /* PDIappUITests.swift */; };
+		80126D8B202E472000B3CFAB /* Machine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126D8A202E472000B3CFAB /* Machine.swift */; };
+		80126E0F202FA15B00B3CFAB /* PDIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E0E202FA15B00B3CFAB /* PDIViewController.swift */; };
+		80126E11202FA1B900B3CFAB /* FuelConsumptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E10202FA1B900B3CFAB /* FuelConsumptionViewController.swift */; };
+		80126E13202FA23E00B3CFAB /* PDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E12202FA23E00B3CFAB /* PDI.swift */; };
+		80126E15202FA2A600B3CFAB /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E14202FA2A600B3CFAB /* Checkpoint.swift */; };
+		80126E1E2031E4F900B3CFAB /* FinalFCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E1D2031E4F900B3CFAB /* FinalFCViewController.swift */; };
+		80126E202031E72D00B3CFAB /* batteryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E1F2031E72D00B3CFAB /* batteryViewController.swift */; };
+		801271B52032281000B3CFAB /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801271A82032280100B3CFAB /* SQLite.framework */; };
+		801271B62032281600B3CFAB /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 801271A82032280100B3CFAB /* SQLite.framework */; };
+		801271B72032281600B3CFAB /* SQLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 801271A82032280100B3CFAB /* SQLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		801271CF20372FC600B3CFAB /* holdString.txt in Resources */ = {isa = PBXBuildFile; fileRef = 801271CE20372FC600B3CFAB /* holdString.txt */; };
+		801271D12037411400B3CFAB /* holdMachines.txt in Resources */ = {isa = PBXBuildFile; fileRef = 801271D02037411400B3CFAB /* holdMachines.txt */; };
+		8013C65A203B22F8002B9D9E /* macComm.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8013C653203B22F8002B9D9E /* macComm.txt */; };
+		80262749203B271F00D15EF5 /* userInfo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 80262742203B271F00D15EF5 /* userInfo.txt */; };
+		8026274B203B49FE00D15EF5 /* app.js in Resources */ = {isa = PBXBuildFile; fileRef = 8026274A203B49FE00D15EF5 /* app.js */; };
+		8026274D203B750100D15EF5 /* sendBack.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8026274C203B750100D15EF5 /* sendBack.txt */; };
+		802F04E5204DAC6F00824134 /* MongoKitten.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D6204DAC6100824134 /* MongoKitten.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		802F04E6204DAC6F00824134 /* MongoKitten.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D6204DAC6100824134 /* MongoKitten.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8072099F2046F148000B703F /* variantBin.txt in Resources */ = {isa = PBXBuildFile; fileRef = 807209982046F148000B703F /* variantBin.txt */; };
+		807209A12046F195000B703F /* machineBin.txt in Resources */ = {isa = PBXBuildFile; fileRef = 807209A02046F195000B703F /* machineBin.txt */; };
+		807209A32046F1AB000B703F /* checkpointBin.txt in Resources */ = {isa = PBXBuildFile; fileRef = 807209A22046F1AB000B703F /* checkpointBin.txt */; };
+		807FA1B22052DCE800A14156 /* BSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04E4204DAC6100824134 /* BSON.framework */; };
+		807FA1B32052DCE800A14156 /* BSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04E4204DAC6100824134 /* BSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		807FA1BC2052DD1400A14156 /* ExtendedJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04DC204DAC6100824134 /* ExtendedJSON.framework */; };
+		807FA1BD2052DD1400A14156 /* ExtendedJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04DC204DAC6100824134 /* ExtendedJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		807FA1C02052DD1A00A14156 /* GeoJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04DA204DAC6100824134 /* GeoJSON.framework */; };
+		807FA1C12052DD1A00A14156 /* GeoJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04DA204DAC6100824134 /* GeoJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		807FA1C42052DD1E00A14156 /* Cheetah.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04E2204DAC6100824134 /* Cheetah.framework */; };
+		807FA1C52052DD1E00A14156 /* Cheetah.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04E2204DAC6100824134 /* Cheetah.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		807FA1C82052DD2200A14156 /* CryptoKitten.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04E0204DAC6100824134 /* CryptoKitten.framework */; };
+		807FA1C92052DD2200A14156 /* CryptoKitten.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04E0204DAC6100824134 /* CryptoKitten.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		807FA1CC2052DD2600A14156 /* Schrodinger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04DE204DAC6100824134 /* Schrodinger.framework */; };
+		807FA1CD2052DD2600A14156 /* Schrodinger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04DE204DAC6100824134 /* Schrodinger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		807FA1D02052DD2A00A14156 /* MongoSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D8204DAC6100824134 /* MongoSocket.framework */; };
+		807FA1D12052DD2A00A14156 /* MongoSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D8204DAC6100824134 /* MongoSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		807FA1D42052DD2F00A14156 /* MyTarget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D4204DAC6100824134 /* MyTarget.framework */; };
+		807FA1D52052DD2F00A14156 /* MyTarget.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D4204DAC6100824134 /* MyTarget.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		807FA1D92052DE5500A14156 /* userInfoLoc.txt in Resources */ = {isa = PBXBuildFile; fileRef = 807FA1D82052DE5500A14156 /* userInfoLoc.txt */; };
+		807FA1DA2052EFB800A14156 /* exportData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D6203DE4120002E716 /* exportData.swift */; };
+		807FA1DC2052F9B100A14156 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807FA1DB2052F9B100A14156 /* LaunchViewController.swift */; };
+		807FA1E0205306F200A14156 /* TextPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807FA1DF205306F200A14156 /* TextPopUpViewController.swift */; };
+		80E235D5203DD08A0002E716 /* Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D4203DD08A0002E716 /* Variant.swift */; };
+		80E235D7203DE4120002E716 /* exportData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D6203DE4120002E716 /* exportData.swift */; };
+		80E235D9203DF9E70002E716 /* importData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D8203DF9E70002E716 /* importData.swift */; };
+		80E235DB203E0E100002E716 /* OMViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235DA203E0E100002E716 /* OMViewController.swift */; };
+		80E235DD203E0E240002E716 /* VariantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235DC203E0E240002E716 /* VariantsViewController.swift */; };
+		80E3DF0020444F2F0048F657 /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E3DEFF20444F2F0048F657 /* PopUpViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +78,219 @@
 			remoteGlobalIDString = 80126D37202E413500B3CFAB;
 			remoteInfo = PDIapp;
 		};
+		801271A72032280100B3CFAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE247AD31C3F04ED00AE3E12;
+			remoteInfo = "SQLite iOS";
+		};
+		801271A92032280100B3CFAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE247ADD1C3F04ED00AE3E12;
+			remoteInfo = "SQLiteTests iOS";
+		};
+		801271AB2032280100B3CFAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE247B3C1C3F3ED000AE3E12;
+			remoteInfo = "SQLite Mac";
+		};
+		801271AD2032280100B3CFAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE247B451C3F3ED000AE3E12;
+			remoteInfo = "SQLiteTests Mac";
+		};
+		801271AF2032280100B3CFAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03A65E5A1C6BB0F50062603F;
+			remoteInfo = "SQLite tvOS";
+		};
+		801271B12032280100B3CFAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03A65E631C6BB0F60062603F;
+			remoteInfo = "SQLiteTests tvOS";
+		};
+		801271B32032280100B3CFAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A121AC451CA35C79005A31D1;
+			remoteInfo = "SQLite watchOS";
+		};
+		801271B82032281600B3CFAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EE247AD21C3F04ED00AE3E12;
+			remoteInfo = "SQLite iOS";
+		};
+		802F04D1204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "MKFrame::MKFrame::Product";
+			remoteInfo = MKFrame;
+		};
+		802F04D3204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "MKFrame::MyTarget::Product";
+			remoteInfo = MyTarget;
+		};
+		802F04D5204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "MongoKitten::MongoKitten::Product";
+			remoteInfo = MongoKitten;
+		};
+		802F04D7204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "MongoKitten::MongoSocket::Product";
+			remoteInfo = MongoSocket;
+		};
+		802F04D9204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "MongoKitten::GeoJSON::Product";
+			remoteInfo = GeoJSON;
+		};
+		802F04DB204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "MongoKitten::ExtendedJSON::Product";
+			remoteInfo = ExtendedJSON;
+		};
+		802F04DD204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "Schrodinger::Schrodinger::Product";
+			remoteInfo = Schrodinger;
+		};
+		802F04DF204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "CryptoKitten::CryptoKitten::Product";
+			remoteInfo = CryptoKitten;
+		};
+		802F04E1204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "Cheetah::Cheetah::Product";
+			remoteInfo = Cheetah;
+		};
+		802F04E3204DAC6100824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "BSON::BSON::Product";
+			remoteInfo = BSON;
+		};
+		802F04E7204DAC6F00824134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "MongoKitten::MongoKitten";
+			remoteInfo = MongoKitten;
+		};
+		807FA1B42052DCE800A14156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "BSON::BSON";
+			remoteInfo = BSON;
+		};
+		807FA1BE2052DD1400A14156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "MongoKitten::ExtendedJSON";
+			remoteInfo = ExtendedJSON;
+		};
+		807FA1C22052DD1A00A14156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "MongoKitten::GeoJSON";
+			remoteInfo = GeoJSON;
+		};
+		807FA1C62052DD1E00A14156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "Cheetah::Cheetah";
+			remoteInfo = Cheetah;
+		};
+		807FA1CA2052DD2200A14156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "CryptoKitten::CryptoKitten";
+			remoteInfo = CryptoKitten;
+		};
+		807FA1CE2052DD2600A14156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "Schrodinger::Schrodinger";
+			remoteInfo = Schrodinger;
+		};
+		807FA1D22052DD2A00A14156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "MongoKitten::MongoSocket";
+			remoteInfo = MongoSocket;
+		};
+		807FA1D62052DD2F00A14156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "MKFrame::MyTarget";
+			remoteInfo = MyTarget;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		80126D87202E41EB00B3CFAB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				802F04E6204DAC6F00824134 /* MongoKitten.framework in Embed Frameworks */,
+				807FA1CD2052DD2600A14156 /* Schrodinger.framework in Embed Frameworks */,
+				807FA1C92052DD2200A14156 /* CryptoKitten.framework in Embed Frameworks */,
+				807FA1BD2052DD1400A14156 /* ExtendedJSON.framework in Embed Frameworks */,
+				801271B72032281600B3CFAB /* SQLite.framework in Embed Frameworks */,
+				807FA1C52052DD1E00A14156 /* Cheetah.framework in Embed Frameworks */,
+				807FA1B32052DCE800A14156 /* BSON.framework in Embed Frameworks */,
+				807FA1D52052DD2F00A14156 /* MyTarget.framework in Embed Frameworks */,
+				807FA1C12052DD1A00A14156 /* GeoJSON.framework in Embed Frameworks */,
+				807FA1D12052DD2A00A14156 /* MongoSocket.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		80126D38202E413500B3CFAB /* PDIapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDIapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +306,34 @@
 		80126D57202E413600B3CFAB /* PDIappUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PDIappUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80126D5B202E413600B3CFAB /* PDIappUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDIappUITests.swift; sourceTree = "<group>"; };
 		80126D5D202E413600B3CFAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		80126D8A202E472000B3CFAB /* Machine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Machine.swift; sourceTree = "<group>"; };
+		80126E0E202FA15B00B3CFAB /* PDIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDIViewController.swift; sourceTree = "<group>"; };
+		80126E10202FA1B900B3CFAB /* FuelConsumptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuelConsumptionViewController.swift; sourceTree = "<group>"; };
+		80126E12202FA23E00B3CFAB /* PDI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDI.swift; sourceTree = "<group>"; };
+		80126E14202FA2A600B3CFAB /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
+		80126E1D2031E4F900B3CFAB /* FinalFCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalFCViewController.swift; sourceTree = "<group>"; };
+		80126E1F2031E72D00B3CFAB /* batteryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = batteryViewController.swift; sourceTree = "<group>"; };
+		8012719D2032280100B3CFAB /* SQLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SQLite.xcodeproj; path = "../SQLite.swift-master/SQLite.xcodeproj"; sourceTree = "<group>"; };
+		801271CE20372FC600B3CFAB /* holdString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = holdString.txt; sourceTree = "<group>"; };
+		801271D02037411400B3CFAB /* holdMachines.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = holdMachines.txt; sourceTree = "<group>"; };
+		801271D420374A1600B3CFAB /* PDIapp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PDIapp-Bridging-Header.h"; sourceTree = "<group>"; };
+		8013C653203B22F8002B9D9E /* macComm.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = macComm.txt; sourceTree = "<group>"; };
+		80262742203B271F00D15EF5 /* userInfo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = userInfo.txt; sourceTree = "<group>"; };
+		8026274A203B49FE00D15EF5 /* app.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = app.js; sourceTree = "<group>"; };
+		8026274C203B750100D15EF5 /* sendBack.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sendBack.txt; sourceTree = "<group>"; };
+		802F04BE204DAC6000824134 /* MKFrame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MKFrame.xcodeproj; path = MKFrame/MKFrame.xcodeproj; sourceTree = "<group>"; };
+		807209982046F148000B703F /* variantBin.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = variantBin.txt; sourceTree = "<group>"; };
+		807209A02046F195000B703F /* machineBin.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = machineBin.txt; sourceTree = "<group>"; };
+		807209A22046F1AB000B703F /* checkpointBin.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = checkpointBin.txt; sourceTree = "<group>"; };
+		807FA1D82052DE5500A14156 /* userInfoLoc.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = userInfoLoc.txt; sourceTree = "<group>"; };
+		807FA1DB2052F9B100A14156 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
+		807FA1DF205306F200A14156 /* TextPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPopUpViewController.swift; sourceTree = "<group>"; };
+		80E235D4203DD08A0002E716 /* Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variant.swift; sourceTree = "<group>"; };
+		80E235D6203DE4120002E716 /* exportData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = exportData.swift; sourceTree = "<group>"; };
+		80E235D8203DF9E70002E716 /* importData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = importData.swift; sourceTree = "<group>"; };
+		80E235DA203E0E100002E716 /* OMViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMViewController.swift; sourceTree = "<group>"; };
+		80E235DC203E0E240002E716 /* VariantsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantsViewController.swift; sourceTree = "<group>"; };
+		80E3DEFF20444F2F0048F657 /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +341,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				807FA1CC2052DD2600A14156 /* Schrodinger.framework in Frameworks */,
+				807FA1B22052DCE800A14156 /* BSON.framework in Frameworks */,
+				807FA1D02052DD2A00A14156 /* MongoSocket.framework in Frameworks */,
+				807FA1C42052DD1E00A14156 /* Cheetah.framework in Frameworks */,
+				807FA1C82052DD2200A14156 /* CryptoKitten.framework in Frameworks */,
+				807FA1BC2052DD1400A14156 /* ExtendedJSON.framework in Frameworks */,
+				807FA1C02052DD1A00A14156 /* GeoJSON.framework in Frameworks */,
+				807FA1D42052DD2F00A14156 /* MyTarget.framework in Frameworks */,
+				802F04E5204DAC6F00824134 /* MongoKitten.framework in Frameworks */,
+				801271B62032281600B3CFAB /* SQLite.framework in Frameworks */,
+				801271B52032281000B3CFAB /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,10 +375,13 @@
 		80126D2F202E413500B3CFAB = {
 			isa = PBXGroup;
 			children = (
+				802F04BE204DAC6000824134 /* MKFrame.xcodeproj */,
+				8012719D2032280100B3CFAB /* SQLite.xcodeproj */,
 				80126D3A202E413500B3CFAB /* PDIapp */,
 				80126D4F202E413600B3CFAB /* PDIappTests */,
 				80126D5A202E413600B3CFAB /* PDIappUITests */,
 				80126D39202E413500B3CFAB /* Products */,
+				80126D81202E41E600B3CFAB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,12 +398,38 @@
 		80126D3A202E413500B3CFAB /* PDIapp */ = {
 			isa = PBXGroup;
 			children = (
+				801271D420374A1600B3CFAB /* PDIapp-Bridging-Header.h */,
 				80126D3B202E413600B3CFAB /* AppDelegate.swift */,
 				80126D3D202E413600B3CFAB /* ViewController.swift */,
+				80E235D6203DE4120002E716 /* exportData.swift */,
+				80E235D8203DF9E70002E716 /* importData.swift */,
 				80126D3F202E413600B3CFAB /* Main.storyboard */,
+				807FA1DF205306F200A14156 /* TextPopUpViewController.swift */,
+				80E3DEFF20444F2F0048F657 /* PopUpViewController.swift */,
+				80126E1F2031E72D00B3CFAB /* batteryViewController.swift */,
+				80126E1D2031E4F900B3CFAB /* FinalFCViewController.swift */,
+				80E235DA203E0E100002E716 /* OMViewController.swift */,
+				80E235DC203E0E240002E716 /* VariantsViewController.swift */,
+				80126E10202FA1B900B3CFAB /* FuelConsumptionViewController.swift */,
+				80E235D4203DD08A0002E716 /* Variant.swift */,
+				80126E12202FA23E00B3CFAB /* PDI.swift */,
+				80126E14202FA2A600B3CFAB /* Checkpoint.swift */,
+				80126E0E202FA15B00B3CFAB /* PDIViewController.swift */,
+				80126D8A202E472000B3CFAB /* Machine.swift */,
 				80126D42202E413600B3CFAB /* Assets.xcassets */,
 				80126D44202E413600B3CFAB /* LaunchScreen.storyboard */,
+				807FA1DB2052F9B100A14156 /* LaunchViewController.swift */,
+				8026274A203B49FE00D15EF5 /* app.js */,
 				80126D47202E413600B3CFAB /* Info.plist */,
+				801271CE20372FC600B3CFAB /* holdString.txt */,
+				801271D02037411400B3CFAB /* holdMachines.txt */,
+				807209A22046F1AB000B703F /* checkpointBin.txt */,
+				807209A02046F195000B703F /* machineBin.txt */,
+				807209982046F148000B703F /* variantBin.txt */,
+				8013C653203B22F8002B9D9E /* macComm.txt */,
+				8026274C203B750100D15EF5 /* sendBack.txt */,
+				80262742203B271F00D15EF5 /* userInfo.txt */,
+				807FA1D82052DE5500A14156 /* userInfoLoc.txt */,
 			);
 			path = PDIapp;
 			sourceTree = "<group>";
@@ -125,6 +452,44 @@
 			path = PDIappUITests;
 			sourceTree = "<group>";
 		};
+		80126D81202E41E600B3CFAB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8012719E2032280100B3CFAB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				801271A82032280100B3CFAB /* SQLite.framework */,
+				801271AA2032280100B3CFAB /* SQLiteTests iOS.xctest */,
+				801271AC2032280100B3CFAB /* SQLite.framework */,
+				801271AE2032280100B3CFAB /* SQLiteTests Mac.xctest */,
+				801271B02032280100B3CFAB /* SQLite.framework */,
+				801271B22032280100B3CFAB /* SQLiteTests tvOS.xctest */,
+				801271B42032280100B3CFAB /* SQLite.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		802F04BF204DAC6000824134 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				802F04D2204DAC6100824134 /* MKFrame */,
+				802F04D4204DAC6100824134 /* MyTarget.framework */,
+				802F04D6204DAC6100824134 /* MongoKitten.framework */,
+				802F04D8204DAC6100824134 /* MongoSocket.framework */,
+				802F04DA204DAC6100824134 /* GeoJSON.framework */,
+				802F04DC204DAC6100824134 /* ExtendedJSON.framework */,
+				802F04DE204DAC6100824134 /* Schrodinger.framework */,
+				802F04E0204DAC6100824134 /* CryptoKitten.framework */,
+				802F04E2204DAC6100824134 /* Cheetah.framework */,
+				802F04E4204DAC6100824134 /* BSON.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,10 +500,21 @@
 				80126D34202E413500B3CFAB /* Sources */,
 				80126D35202E413500B3CFAB /* Frameworks */,
 				80126D36202E413500B3CFAB /* Resources */,
+				80126D87202E41EB00B3CFAB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				801271B92032281600B3CFAB /* PBXTargetDependency */,
+				802F04E8204DAC6F00824134 /* PBXTargetDependency */,
+				807FA1B52052DCE800A14156 /* PBXTargetDependency */,
+				807FA1BF2052DD1400A14156 /* PBXTargetDependency */,
+				807FA1C32052DD1A00A14156 /* PBXTargetDependency */,
+				807FA1C72052DD1E00A14156 /* PBXTargetDependency */,
+				807FA1CB2052DD2200A14156 /* PBXTargetDependency */,
+				807FA1CF2052DD2600A14156 /* PBXTargetDependency */,
+				807FA1D32052DD2A00A14156 /* PBXTargetDependency */,
+				807FA1D72052DD2F00A14156 /* PBXTargetDependency */,
 			);
 			name = PDIapp;
 			productName = PDIapp;
@@ -187,12 +563,13 @@
 		80126D30202E413500B3CFAB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastSwiftUpdateCheck = 920;
+				LastUpgradeCheck = 920;
 				ORGANIZATIONNAME = "Lauren Shultz";
 				TargetAttributes = {
 					80126D37202E413500B3CFAB = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 920;
 						ProvisioningStyle = Automatic;
 					};
 					80126D4B202E413600B3CFAB = {
@@ -218,6 +595,16 @@
 			mainGroup = 80126D2F202E413500B3CFAB;
 			productRefGroup = 80126D39202E413500B3CFAB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 802F04BF204DAC6000824134 /* Products */;
+					ProjectRef = 802F04BE204DAC6000824134 /* MKFrame.xcodeproj */;
+				},
+				{
+					ProductGroup = 8012719E2032280100B3CFAB /* Products */;
+					ProjectRef = 8012719D2032280100B3CFAB /* SQLite.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				80126D37202E413500B3CFAB /* PDIapp */,
@@ -227,13 +614,145 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		801271A82032280100B3CFAB /* SQLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SQLite.framework;
+			remoteRef = 801271A72032280100B3CFAB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		801271AA2032280100B3CFAB /* SQLiteTests iOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "SQLiteTests iOS.xctest";
+			remoteRef = 801271A92032280100B3CFAB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		801271AC2032280100B3CFAB /* SQLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SQLite.framework;
+			remoteRef = 801271AB2032280100B3CFAB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		801271AE2032280100B3CFAB /* SQLiteTests Mac.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "SQLiteTests Mac.xctest";
+			remoteRef = 801271AD2032280100B3CFAB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		801271B02032280100B3CFAB /* SQLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SQLite.framework;
+			remoteRef = 801271AF2032280100B3CFAB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		801271B22032280100B3CFAB /* SQLiteTests tvOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "SQLiteTests tvOS.xctest";
+			remoteRef = 801271B12032280100B3CFAB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		801271B42032280100B3CFAB /* SQLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SQLite.framework;
+			remoteRef = 801271B32032280100B3CFAB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04D2204DAC6100824134 /* MKFrame */ = {
+			isa = PBXReferenceProxy;
+			fileType = text;
+			path = MKFrame;
+			remoteRef = 802F04D1204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04D4204DAC6100824134 /* MyTarget.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MyTarget.framework;
+			remoteRef = 802F04D3204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04D6204DAC6100824134 /* MongoKitten.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MongoKitten.framework;
+			remoteRef = 802F04D5204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04D8204DAC6100824134 /* MongoSocket.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MongoSocket.framework;
+			remoteRef = 802F04D7204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04DA204DAC6100824134 /* GeoJSON.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GeoJSON.framework;
+			remoteRef = 802F04D9204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04DC204DAC6100824134 /* ExtendedJSON.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ExtendedJSON.framework;
+			remoteRef = 802F04DB204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04DE204DAC6100824134 /* Schrodinger.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Schrodinger.framework;
+			remoteRef = 802F04DD204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04E0204DAC6100824134 /* CryptoKitten.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CryptoKitten.framework;
+			remoteRef = 802F04DF204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04E2204DAC6100824134 /* Cheetah.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Cheetah.framework;
+			remoteRef = 802F04E1204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		802F04E4204DAC6100824134 /* BSON.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BSON.framework;
+			remoteRef = 802F04E3204DAC6100824134 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		80126D36202E413500B3CFAB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				807209A32046F1AB000B703F /* checkpointBin.txt in Resources */,
+				807209A12046F195000B703F /* machineBin.txt in Resources */,
+				801271D12037411400B3CFAB /* holdMachines.txt in Resources */,
 				80126D46202E413600B3CFAB /* LaunchScreen.storyboard in Resources */,
+				8072099F2046F148000B703F /* variantBin.txt in Resources */,
+				8026274D203B750100D15EF5 /* sendBack.txt in Resources */,
+				8026274B203B49FE00D15EF5 /* app.js in Resources */,
+				8013C65A203B22F8002B9D9E /* macComm.txt in Resources */,
+				807FA1D92052DE5500A14156 /* userInfoLoc.txt in Resources */,
 				80126D43202E413600B3CFAB /* Assets.xcassets in Resources */,
+				801271CF20372FC600B3CFAB /* holdString.txt in Resources */,
+				80262749203B271F00D15EF5 /* userInfo.txt in Resources */,
 				80126D41202E413600B3CFAB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,8 +778,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80E235DB203E0E100002E716 /* OMViewController.swift in Sources */,
+				80126E1E2031E4F900B3CFAB /* FinalFCViewController.swift in Sources */,
+				80E235DD203E0E240002E716 /* VariantsViewController.swift in Sources */,
 				80126D3E202E413600B3CFAB /* ViewController.swift in Sources */,
+				80126E15202FA2A600B3CFAB /* Checkpoint.swift in Sources */,
+				80E235D7203DE4120002E716 /* exportData.swift in Sources */,
+				80126E13202FA23E00B3CFAB /* PDI.swift in Sources */,
 				80126D3C202E413600B3CFAB /* AppDelegate.swift in Sources */,
+				80126E0F202FA15B00B3CFAB /* PDIViewController.swift in Sources */,
+				80126D8B202E472000B3CFAB /* Machine.swift in Sources */,
+				80E3DF0020444F2F0048F657 /* PopUpViewController.swift in Sources */,
+				80126E11202FA1B900B3CFAB /* FuelConsumptionViewController.swift in Sources */,
+				80E235D9203DF9E70002E716 /* importData.swift in Sources */,
+				80E235D5203DD08A0002E716 /* Variant.swift in Sources */,
+				80126E202031E72D00B3CFAB /* batteryViewController.swift in Sources */,
+				807FA1DC2052F9B100A14156 /* LaunchViewController.swift in Sources */,
+				807FA1E0205306F200A14156 /* TextPopUpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +811,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				80126D5C202E413600B3CFAB /* PDIappUITests.swift in Sources */,
+				807FA1DA2052EFB800A14156 /* exportData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +827,56 @@
 			isa = PBXTargetDependency;
 			target = 80126D37202E413500B3CFAB /* PDIapp */;
 			targetProxy = 80126D58202E413600B3CFAB /* PBXContainerItemProxy */;
+		};
+		801271B92032281600B3CFAB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "SQLite iOS";
+			targetProxy = 801271B82032281600B3CFAB /* PBXContainerItemProxy */;
+		};
+		802F04E8204DAC6F00824134 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MongoKitten;
+			targetProxy = 802F04E7204DAC6F00824134 /* PBXContainerItemProxy */;
+		};
+		807FA1B52052DCE800A14156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BSON;
+			targetProxy = 807FA1B42052DCE800A14156 /* PBXContainerItemProxy */;
+		};
+		807FA1BF2052DD1400A14156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ExtendedJSON;
+			targetProxy = 807FA1BE2052DD1400A14156 /* PBXContainerItemProxy */;
+		};
+		807FA1C32052DD1A00A14156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GeoJSON;
+			targetProxy = 807FA1C22052DD1A00A14156 /* PBXContainerItemProxy */;
+		};
+		807FA1C72052DD1E00A14156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Cheetah;
+			targetProxy = 807FA1C62052DD1E00A14156 /* PBXContainerItemProxy */;
+		};
+		807FA1CB2052DD2200A14156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CryptoKitten;
+			targetProxy = 807FA1CA2052DD2200A14156 /* PBXContainerItemProxy */;
+		};
+		807FA1CF2052DD2600A14156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Schrodinger;
+			targetProxy = 807FA1CE2052DD2600A14156 /* PBXContainerItemProxy */;
+		};
+		807FA1D32052DD2A00A14156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MongoSocket;
+			targetProxy = 807FA1D22052DD2A00A14156 /* PBXContainerItemProxy */;
+		};
+		807FA1D72052DD2F00A14156 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MyTarget;
+			targetProxy = 807FA1D62052DD2F00A14156 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -425,12 +1010,18 @@
 		80126D61202E413600B3CFAB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = BR3Q5746G9;
 				INFOPLIST_FILE = PDIapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = lshultz.PDIapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PDIapp/PDIapp-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -439,12 +1030,17 @@
 		80126D62202E413600B3CFAB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = BR3Q5746G9;
 				INFOPLIST_FILE = PDIapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = lshultz.PDIapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PDIapp/PDIapp-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
