@@ -8,18 +8,22 @@
 
 import Foundation
 
+/*
+ * CLASS: PDI
+ * PURPOSE: Is an object that builds the configuration of a PDI
+ */
 class PDI
 {
     var initialFuelConsumption: Double!
     var finalFuelConsumption: Double!
     var name: String!
     
-    var OMMain: String!
-    var OMSupp: String!
-    var OMFitting: String!
-    var OMCemos: String!
-    var OMTeraTrack: String!
-    var OMProfiCam: String!
+    var OMMain = ""
+    var OMSupp = ""
+    var OMFitting = ""
+    var OMCemos = ""
+    var OMTeraTrack = ""
+    var OMProfiCam = ""
     
     //Hold battery entries
     //[0] = CCA, [1] = Volt
@@ -48,6 +52,14 @@ class PDI
     var variantResponseBank = [Int]()
     var quesitonIssueBank = [String]()
     
+    var skipped: [Variant]!
+    var skippedPos: [Int]!
+    var skippedResponseBank: [Int]!
+    var currentSkipped = 0;
+    var noSkippedVariants = false
+    var noSkippedCheckpoints = false
+    
+    
     init(name: String)
     {
         self.name = name
@@ -74,11 +86,11 @@ class PDI
         checkpointBank.removeAll()
         if(arrayIn.count != 0)
         {
-            for index in 0...arrayIn.count - 1{
+            for index in 0..<arrayIn.count{
                 checkpointBank.append(arrayIn[index])
             }
         }
-        for _ in 0...checkpointBank.count - 1
+        for _ in 0..<checkpointBank.count
         {
             questionResponseBank.append(0)
         }

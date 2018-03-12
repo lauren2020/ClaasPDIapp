@@ -8,6 +8,10 @@
 
 import Foundation
 
+/*
+ * CLASS: Checkpoint
+ * PURPOSE: Is an object that builds the configuration of a checkpoint
+ */
 class Checkpoint
 {
     var position: String! //errorPos

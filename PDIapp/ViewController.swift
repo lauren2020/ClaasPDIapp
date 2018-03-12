@@ -25,10 +25,6 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     var exportDat: exportData!
     // holds port for retrieving data from remote db
     var importDat = importData(nameIn: "importDat")
-    //********************REMOVE DB DEPENDENCY*****************************
-    //file path to machine communication file
-    let filePath = Bundle.main.url(forResource: "macComm", withExtension: "txt")!
-    //*********************REMOVE LOCAL DEPENDENCY***************************
     //file path to user info stored data
     let filePathUser = Bundle.main.url(forResource: "userInfo", withExtension: "txt")!
     var toggleList = 0;
@@ -54,6 +50,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         }
         //Will grab user from internal file
         name = getName()
+        if(!importDat.connectionSuccesful)
+        {
+            couldNotConnect()
+        }
         
     }
     
@@ -124,7 +124,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             importDat.fillMachines(type: 0)
             machines = importDat.machineArray
             self.availibleMachineList.reloadAllComponents()
-            machine = machines[0]
+            if(machines.count != 0)
+            {
+                machine = machines[0]
+            }
+            else
+            {
+                machine = nil
+            }
             subLabel.text = "New PDI's:"
             newPdisButton.setBackgroundImage(selected, for: .normal)
             incompPdisButton.setBackgroundImage(notSelected, for: .normal)
@@ -169,30 +176,77 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         //Check to verify machine is selected
         if(machine != nil)
         {
-        //Build a new PDI for selected machine
-        machine.addPDI(pdiIn: PDI(name: machine.name))
-        machine.thisPDI.status = 1
-        machine.thisPDI.completedBy = name
-        print("NEW PDI ADDED TO MACHINE ", machine.name)
+            //Build a new PDI for selected machine
+            machine.addPDI(pdiIn: PDI(name: machine.name))
+            machine.thisPDI.status = 1
+            machine.thisPDI.completedBy = name
+            print("NEW PDI ADDED TO MACHINE ", machine.name)
         
-        //fill checkpoints in PDI
-        importDat.fillCheckpoints(macName: machine.name)
-        checkpointsArray = importDat.cpArray
-        machine.thisPDI.setQuestionBank(arrayIn: checkpointsArray)
+            //fill checkpoints in PDI
+            importDat.fillCheckpoints(macName: machine.name)
+            checkpointsArray = importDat.cpArray
+            machine.thisPDI.setQuestionBank(arrayIn: checkpointsArray)
         
-        //fill variants in PDI
-        importDat.fillVariants(macName: machine.name)
-        variantArray = importDat.variantArray
-        machine.thisPDI.setVariantBank(arrayIn: variantArray)
-        
-        //create port for shipping information to db
-        exportDat = exportData(machineIn: machine)
-        //create new object in collection "inspectedMachines"
-        exportDat.createInspected()
-        //change status to in progress
-        exportDat.macStatus(status: 2)
-        //Transfer to next segment of PDI
-        self.performSegue(withIdentifier: "startPdiSeg", sender: machine)
+            //fill variants in PDI
+            importDat.fillVariants(macName: machine.name)
+            variantArray = importDat.variantArray
+            machine.thisPDI.setVariantBank(arrayIn: variantArray)
+            
+            //create port for shipping information to db
+            exportDat = exportData(machineIn: machine)
+            //create new object in collection "inspectedMachines"
+            exportDat.createInspected()
+            //change status to in progress
+            exportDat.macStatus(status: 2)
+            //Transfer to next segment of PDI
+            if(importDat.exists(macName: machine.name))
+            {
+                var position = importDat.getReturnPos(macName: machine.name)
+                //load ifc
+                //load battery
+                //load om
+                //load variant responsebank
+                //load checkpoint response bank
+                if(position == "ifc")
+                {
+                    importDat.setInitialFuelConsumption(machine: machine)
+                    self.performSegue(withIdentifier: "startPdiSeg", sender: machine)
+                }
+                else if(position == "bat")
+                {
+                    importDat.setInitialFuelConsumption(machine: machine)
+                    importDat.setBatteries(machine: machine)
+                    self.performSegue(withIdentifier: "startToBAT", sender: machine)
+                }
+                else if(position == "omm")
+                {
+                    importDat.setInitialFuelConsumption(machine: machine)
+                    importDat.setBatteries(machine: machine)
+                    importDat.setOMs(machine: machine)
+                    self.performSegue(withIdentifier: "startToOMM", sender: machine)
+                }
+                else if(position == "var")
+                {
+                    importDat.setInitialFuelConsumption(machine: machine)
+                    importDat.setBatteries(machine: machine)
+                    importDat.setOMs(machine: machine)
+                    importDat.setVariantResponses(machine: machine)
+                    self.performSegue(withIdentifier: "startToVAR", sender: machine)
+                }
+                else if(position == "cps")
+                {
+                    importDat.setInitialFuelConsumption(machine: machine)
+                    importDat.setBatteries(machine: machine)
+                    importDat.setOMs(machine: machine)
+                    importDat.setVariantResponses(machine: machine)
+                    importDat.setCheckpointResponses(machine: machine)
+                    self.performSegue(withIdentifier: "startToCPS", sender: machine)
+                }
+            }
+            else
+            {
+                self.performSegue(withIdentifier: "startPdiSeg", sender: machine)
+            }
         }
         else
         {
@@ -204,6 +258,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             self.view.addSubview(popOverVC.view)
             popOverVC.didMove(toParentViewController: self)
         }
+    }
+    func couldNotConnect()
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textButtonPopUp") as! TextPopUpViewController
+        popOverVC.message = "Could not connect, make sure you are using 'cwgast'"
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
     }
     
     /*
@@ -222,6 +284,50 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                 vc.name = self.name
                 vc.exportDat = self.exportDat
                 print("exportDat Object Passed to FC")
+            }
+        }
+        if segue.identifier == "startToBAT"
+        {
+            if let vc = segue.destination as? batteryViewController
+            {
+                //Sends selected machine and name of user to next segment
+                vc.machine = self.machine
+                vc.name = self.name
+                vc.exportDat = self.exportDat
+                print("exportDat Object Passed to Battery")
+            }
+        }
+        if segue.identifier == "startToOMM"
+        {
+            if let vc = segue.destination as? OMViewController
+            {
+                //Sends selected machine and name of user to next segment
+                vc.machine = self.machine
+                vc.name = self.name
+                vc.exportDat = self.exportDat
+                print("exportDat Object Passed to OM")
+            }
+        }
+        if segue.identifier == "startToVAR"
+        {
+            if let vc = segue.destination as? VariantsViewController
+            {
+                //Sends selected machine and name of user to next segment
+                vc.machine = self.machine
+                vc.name = self.name
+                vc.exportDat = self.exportDat
+                print("exportDat Object Passed to Variants")
+            }
+        }
+        if segue.identifier == "startToCPS"
+        {
+            if let vc = segue.destination as? PDIViewController
+            {
+                //Sends selected machine and name of user to next segment
+                vc.machine = self.machine
+                vc.name = self.name
+                vc.exportDat = self.exportDat
+                print("exportDat Object Passed to Checkpoints")
             }
         }
     }

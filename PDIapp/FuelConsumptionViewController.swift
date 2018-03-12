@@ -116,8 +116,24 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
     
     @IBAction func saveExitPressed(_ sender: Any)
     {
+        let isFilled = fuelConsumptionBox.hasText
+        var isDouble = false
+        if let lat = fuelConsumptionBox.text,
+            let _ = Double(lat) {
+            isDouble = true
+        }
+        else
+        {
+            isDouble = false
+        }
+        if (isDouble && isFilled)
+        {
+            machine.thisPDI.setInitialFuelConsumption(fuelConsumptionIn: Double(fuelConsumptionBox.text!)!)
+            exportDat.pushInitialFuelConsumption()
+        }
         exportDat.setReturnPos(pos: "ifc")
         exportDat.setActiveStatus(activeStat: 0)
+        exportDat.macStatus(status: 2)
         self.performSegue(withIdentifier: "fcCancelToMain", sender: machine)
     }
     

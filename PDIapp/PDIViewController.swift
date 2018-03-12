@@ -284,7 +284,12 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         }
     }
     
-    @IBAction func saveExitPressed(_ sender: Any) {
+    @IBAction func saveExitPressed(_ sender: Any)
+    {
+        exportDat.setReturnPos(pos: "cps")
+        exportDat.setActiveStatus(activeStat: 0)
+        exportDat.macStatus(status: 2)
+        self.performSegue(withIdentifier: "checkpointsCancelToMain", sender: machine)
     }
     
     @IBAction func backPagePressed(_ sender: Any)

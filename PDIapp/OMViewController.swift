@@ -8,15 +8,24 @@
 
 import UIKit
 
+/*
+ * CLASS: OMViewController
+ * PURPOSE: Controls the screen that displays and operates OM input
+ */
 class OMViewController: UIViewController, UITextFieldDelegate
 {
+    //indicates whether meassage bar should be configured to "Add an Issue" or "Send Meassage to Wash Bay"
     var toggle = 0
+    //holds the current machine being checked
     var machine: Machine!
+    //holds the name of the individual completeing the current PDI
     var name: String!
     //port for sending data back to database
     var exportDat: exportData!
+    //indicates whether pressing "X" should open or close drop down menu
     var xtoggle = 0
     
+    //Object access identifiers
     @IBOutlet weak var machineLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var omMainField: UITextField!
@@ -45,6 +54,12 @@ class OMViewController: UIViewController, UITextFieldDelegate
         omProfiCamField.delegate = self
         messageField.delegate = self
         
+        omMainField.text = machine.thisPDI.OMMain
+        omSuppField.text = machine.thisPDI.OMSupp
+        omFittingField.text = machine.thisPDI.OMFitting
+        omCemosField.text = machine.thisPDI.OMCemos
+        omTeraTrackField.text = machine.thisPDI.OMTeraTrack
+        omProfiCamField.text = machine.thisPDI.OMProfiCam
         
         cancelButton.isHidden = true
         saveButton.isHidden = true
@@ -65,15 +80,23 @@ class OMViewController: UIViewController, UITextFieldDelegate
      */
     @IBAction func nextPressed(_ sender: Any)
     {
-        machine.thisPDI.OMMain = omMainField.text
-        machine.thisPDI.OMSupp = omSuppField.text
-        machine.thisPDI.OMFitting = omFittingField.text
-        machine.thisPDI.OMCemos = omCemosField.text
-        machine.thisPDI.OMTeraTrack = omTeraTrackField.text
-        machine.thisPDI.OMProfiCam = omProfiCamField.text
+        saveEntries()
         print("Next Pressed")
-        exportDat.pushOM()
         self.performSegue(withIdentifier: "omToVariants", sender: machine)
+    }
+    /*
+     * FUNCTION: saveEntries
+     * PURPOSE: Saves current battery entries in the machines pdi object
+     */
+    func saveEntries()
+    {
+        machine.thisPDI.OMMain = omMainField.text!
+        machine.thisPDI.OMSupp = omSuppField.text!
+        machine.thisPDI.OMFitting = omFittingField.text!
+        machine.thisPDI.OMCemos = omCemosField.text!
+        machine.thisPDI.OMTeraTrack = omTeraTrackField.text!
+        machine.thisPDI.OMProfiCam = omProfiCamField.text!
+        exportDat.pushOM()
     }
     /*
      * FUNCTION: togglePressed
@@ -116,7 +139,10 @@ class OMViewController: UIViewController, UITextFieldDelegate
         }
         messageField.text = ""
     }
-    
+    /*
+     * FUNCTION: xPressed
+     * PURPOSE: When "X" button is pressed, displays a drop down menu with the options to "Cancel" or "Save & Exit"
+     */
     @IBAction func xPressed(_ sender: Any)
     {
         if(xtoggle == 0)
@@ -132,15 +158,23 @@ class OMViewController: UIViewController, UITextFieldDelegate
             xtoggle = 0
         }
     }
-    
+    /*
+     * FUNCTION: saveExitPressed
+     * PURPOSE: If the "Save & Exit" button is pressed, inspectedMachines object stays in database and pdiStatus remains set to "2", user is redirected to home screen
+     */
     @IBAction func saveExitPressed(_ sender: Any)
     {
-        exportDat.setReturnPos(pos: "bat")
+        saveEntries()
+        exportDat.setReturnPos(pos: "omm")
         exportDat.setActiveStatus(activeStat: 0)
-        self.performSegue(withIdentifier: "batteryCancelToMain", sender: machine)
+        exportDat.macStatus(status: 2)
+        self.performSegue(withIdentifier: "omCancelToMain", sender: machine)
     }
     
-    
+    /*
+     * FUNCTION: backPagePressed
+     * PURPOSE: If the back button is pressed, returns user to previous screen
+     */
     @IBAction func backpagePressed(_ sender: Any)
     {
         self.performSegue(withIdentifier: "OMBackToBattery", sender: machine)

@@ -8,17 +8,24 @@
 
 import UIKit
 
+/*
+ * CLASS: batteryViewController
+ * PURPOSE: Controls the screen that displays and operates battery input
+ */
 class batteryViewController: UIViewController, UITextFieldDelegate
 {
-    //BATTERYS DEPEND ON CONFIGURATION OF MACHINE TYPE
+    //BATTERIES DEPEND ON CONFIGURATION OF MACHINE TYPE
     //holds the current machine being checked
     var machine: Machine!
     //holds the name of the individual completeing the current PDI
     var name: String!
     //port for sending data back to database
     var exportDat: exportData!
+    //indicates whether pressing "X" should open or close drop down menu
     var xtoggle = 0
     
+    
+    //Object access identifiers
     @IBOutlet weak var machineLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var nextButton: UIButton!
@@ -38,7 +45,8 @@ class batteryViewController: UIViewController, UITextFieldDelegate
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
@@ -90,6 +98,15 @@ class batteryViewController: UIViewController, UITextFieldDelegate
     @IBAction func nextPressed(_ sender: Any)
     {
         print("Next Pressed")
+        saveEntries()
+        self.performSegue(withIdentifier: "batteryToOm", sender: machine)
+    }
+    /*
+     * FUNCTION: saveEntries
+     * PURPOSE: Saves current battery entries in the machines pdi object
+     */
+    func saveEntries()
+    {
         machine.thisPDI.C13[0] = C130.text!
         machine.thisPDI.C13[1] = C131.text!
         machine.thisPDI.G001[0] = G0010.text!
@@ -103,8 +120,11 @@ class batteryViewController: UIViewController, UITextFieldDelegate
         machine.thisPDI.MAN2[0] = MAN20.text!
         machine.thisPDI.MAN2[1] = MAN21.text!
         exportDat.pushBattery()
-        self.performSegue(withIdentifier: "batteryToOm", sender: machine)
     }
+    /*
+     * FUNCTION: c13Config
+     * PURPOSE: Sets the battery field configuration to only show fields that apply to the c13 battery
+     */
     func c13Config()
     {
         C130.isHidden = false
@@ -122,6 +142,10 @@ class batteryViewController: UIViewController, UITextFieldDelegate
         MAN20.isHidden = true
         MAN21.isHidden = true
     }
+    /*
+     * FUNCTION: mercedesConfig
+     * PURPOSE: Sets the battery field configuration to only show fields that apply to the mercedes battery
+     */
     func mercedesConfig()
     {
         C130.isHidden = true
@@ -143,6 +167,10 @@ class batteryViewController: UIViewController, UITextFieldDelegate
         MAN20.isHidden = true
         MAN21.isHidden = true
     }
+    /*
+     * FUNCTION: manConfig
+     * PURPOSE: Sets the battery field configuration to only show fields that apply to the MAN battery
+     */
     func manConfig()
     {
         C130.isHidden = true
@@ -162,7 +190,10 @@ class batteryViewController: UIViewController, UITextFieldDelegate
         MAN21.isHidden = false
         MAN21.text = machine.thisPDI.MAN2[1]
     }
-    
+    /*
+     * FUNCTION: xPressed
+     * PURPOSE: When "X" button is pressed, displays a drop down menu with the options to "Cancel" or "Save & Exit"
+     */
     @IBAction func xPressed(_ sender: Any)
     {
         if(xtoggle == 0)
@@ -178,13 +209,22 @@ class batteryViewController: UIViewController, UITextFieldDelegate
             xtoggle = 0
         }
     }
-    
+    /*
+     * FUNCTION: saveExitPressed
+     * PURPOSE: If the "Save & Exit" button is pressed, inspectedMachines object stays in database and pdiStatus remains set to "2", user is redirected to home screen
+     */
     @IBAction func saveExitPressed(_ sender: Any)
     {
+        saveEntries()
         exportDat.setReturnPos(pos: "bat")
         exportDat.setActiveStatus(activeStat: 0)
+        exportDat.macStatus(status: 2)
         self.performSegue(withIdentifier: "batteryCancelToMain", sender: machine)
     }
+    /*
+     * FUNCTION: backPagePressed
+     * PURPOSE: If the back button is pressed, returns user to previous screen
+     */
     @IBAction func backPagePressed(_ sender: Any)
     {
         self.performSegue(withIdentifier: "batteryBackToFC", sender: machine)
@@ -192,7 +232,7 @@ class batteryViewController: UIViewController, UITextFieldDelegate
     
     /*
      * FUNCTION: cancelPressed
-     * PURPOSE: Cancels the current PDI and returns to menu
+     * PURPOSE: Cancels the current PDI and returns to menu screen, this removes the machines object in the inspectedMachines collection and sets the pdiStatus in the "machinesReadyToGo" collection back to 0
      */
     @IBAction func cancelPressed(_ sender: Any)
     {

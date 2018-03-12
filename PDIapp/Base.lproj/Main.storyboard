@@ -84,6 +84,10 @@
                         <outlet property="newPdisButton" destination="PKQ-Ig-VCW" id="TfU-gz-OL9"/>
                         <outlet property="subLabel" destination="t0h-aT-Wo0" id="gGi-SJ-jfW"/>
                         <segue destination="Uli-it-dXn" kind="show" identifier="startPdiSeg" id="WKL-un-Hft"/>
+                        <segue destination="0VR-c1-Fb8" kind="show" identifier="startToBAT" id="Y11-iX-e44"/>
+                        <segue destination="LQ3-RN-VjE" kind="show" identifier="startToOMM" id="PM9-jz-YfM"/>
+                        <segue destination="lQe-t9-T1i" kind="show" identifier="startToVAR" id="OuP-v9-3wf"/>
+                        <segue destination="izx-Df-APS" kind="showDetail" identifier="startToCPS" id="RGo-fB-H6A"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -208,7 +212,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZPh-sH-is3" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="KXA-KK-TdH"/>
             </objects>
-            <point key="canvasLocation" x="455.19999999999999" y="148.87556221889056"/>
+            <point key="canvasLocation" x="407" y="149"/>
         </scene>
         <!--Title-->
         <scene sceneID="Izq-bR-4PJ">
@@ -297,7 +301,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x6p-hE-EW6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3263" y="-61"/>
+            <point key="canvasLocation" x="3932" y="149"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="eZg-af-usD">
@@ -537,7 +541,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OTC-FF-8UI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="882" y="1021"/>
+            <point key="canvasLocation" x="1866" y="149"/>
         </scene>
         <!--Variants View Controller-->
         <scene sceneID="bLk-WM-efV">
@@ -729,6 +733,14 @@
                                     <action selector="backPagePressed:" destination="lQe-t9-T1i" eventType="touchUpInside" id="fyO-Op-XHG"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNl-Q3-U87">
+                                <rect key="frame" x="275" y="128" width="84" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Skipped"/>
+                                <connections>
+                                    <action selector="skippedPressed:" destination="lQe-t9-T1i" eventType="touchUpInside" id="gZK-Pl-ocp"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="bi2-FR-DTF"/>
@@ -755,7 +767,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xIV-pL-kte" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1920.8" y="909.89505247376314"/>
+            <point key="canvasLocation" x="2545" y="149"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Wfg-Jc-yMZ">
@@ -985,7 +997,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TaO-9P-Sza" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2834" y="841"/>
+            <point key="canvasLocation" x="3250" y="149"/>
         </scene>
         <!--moreInfoPopUP-->
         <scene sceneID="fAG-fL-LIJ">
@@ -1035,7 +1047,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ILw-rZ-9rU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3876" y="510"/>
+            <point key="canvasLocation" x="-332" y="945"/>
         </scene>
         <!--textButtonPopUp-->
         <scene sceneID="O7U-W4-c0I">
@@ -1059,17 +1071,13 @@
                                             <action selector="okPressed:" destination="h1i-Y8-mT2" eventType="touchUpInside" id="FcC-tR-YLh"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Machine is Selected" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AuC-vj-7kd">
-                                        <rect key="frame" x="8" y="39" width="224" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Machine is Selected" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AuC-vj-7kd">
+                                        <rect key="frame" x="8" y="8" width="224" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Untitled" translatesAutoresizingMaskIntoConstraints="NO" id="7rK-Kf-nXT">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -1084,7 +1092,93 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bVA-ud-Yrk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3860" y="1156.3718140929536"/>
+            <point key="canvasLocation" x="405.60000000000002" y="944.97751124437787"/>
+        </scene>
+        <!--skippedPopUp-->
+        <scene sceneID="MAg-MG-VDP">
+            <objects>
+                <viewController storyboardIdentifier="skippedPopUp" title="skippedPopUp" id="HVM-Dm-7VW" customClass="SkippedPopUpViewController" customModule="PDIapp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="sWJ-Uq-ZdR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m8s-sD-9WG">
+                                <rect key="frame" x="67" y="154" width="240" height="324"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ic3-RH-TYI">
+                                        <rect key="frame" x="8" y="8" width="224" height="241"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NN3-PL-BZK">
+                                        <rect key="frame" x="70" y="280" width="101" height="36"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Ok" backgroundImage="EmptyButton">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="okPressed:" destination="HVM-Dm-7VW" eventType="touchUpInside" id="TBz-M6-qBG"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Qs3-ZX-mfq"/>
+                    </view>
+                    <connections>
+                        <outlet property="list" destination="ic3-RH-TYI" id="gZf-Sk-5eY"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zfe-lV-dFp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1098" y="945"/>
+        </scene>
+        <!--Text Entry Pop Up View Controller-->
+        <scene sceneID="KbV-5Q-xas">
+            <objects>
+                <viewController storyboardIdentifier="textEntryPopUp" id="zUt-eM-uWR" customClass="TextEntryPopUpViewController" customModule="PDIapp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kCF-7X-X2Y">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DXd-BH-mAq">
+                                <rect key="frame" x="16" y="226" width="343" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="895-Gb-XeN">
+                                        <rect key="frame" x="27" y="37" width="289" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Liq-uj-ND3">
+                                        <rect key="frame" x="138" y="75" width="66" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Ok" backgroundImage="EmptyButton"/>
+                                        <connections>
+                                            <action selector="okPressed:" destination="zUt-eM-uWR" eventType="touchUpInside" id="Jri-xT-G5e"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="QfF-rq-l39"/>
+                    </view>
+                    <connections>
+                        <outlet property="messageField" destination="895-Gb-XeN" id="qz5-e1-JrI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mCX-c1-bWn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1730" y="945"/>
         </scene>
         <!--Battery View Controller-->
         <scene sceneID="shf-JO-exF">
@@ -1295,13 +1389,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JmK-RE-EbT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1208.8" y="148.87556221889056"/>
+            <point key="canvasLocation" x="1154" y="149"/>
         </scene>
     </scenes>
     <resources>
         <image name="Black" width="1920" height="1080"/>
         <image name="EmptyButton" width="240" height="60"/>
-        <image name="Untitled" width="800" height="600"/>
         <image name="claas-logo-large-data" width="237" height="39"/>
         <image name="selectedButton2" width="220" height="60"/>
     </resources>

@@ -32,6 +32,8 @@
 		8026274D203B750100D15EF5 /* sendBack.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8026274C203B750100D15EF5 /* sendBack.txt */; };
 		802F04E5204DAC6F00824134 /* MongoKitten.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D6204DAC6100824134 /* MongoKitten.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		802F04E6204DAC6F00824134 /* MongoKitten.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D6204DAC6100824134 /* MongoKitten.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		805F6BF52056BF4900C34C95 /* SkippedPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805F6BF42056BF4900C34C95 /* SkippedPopUpViewController.swift */; };
+		805F6C042056ED8E00C34C95 /* TextEntryPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805F6C032056ED8E00C34C95 /* TextEntryPopUpViewController.swift */; };
 		8072099F2046F148000B703F /* variantBin.txt in Resources */ = {isa = PBXBuildFile; fileRef = 807209982046F148000B703F /* variantBin.txt */; };
 		807209A12046F195000B703F /* machineBin.txt in Resources */ = {isa = PBXBuildFile; fileRef = 807209A02046F195000B703F /* machineBin.txt */; };
 		807209A32046F1AB000B703F /* checkpointBin.txt in Resources */ = {isa = PBXBuildFile; fileRef = 807209A22046F1AB000B703F /* checkpointBin.txt */; };
@@ -55,6 +57,7 @@
 		807FA1DA2052EFB800A14156 /* exportData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D6203DE4120002E716 /* exportData.swift */; };
 		807FA1DC2052F9B100A14156 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807FA1DB2052F9B100A14156 /* LaunchViewController.swift */; };
 		807FA1E0205306F200A14156 /* TextPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807FA1DF205306F200A14156 /* TextPopUpViewController.swift */; };
+		807FA1E220531ED200A14156 /* port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807FA1E120531ED200A14156 /* port.swift */; };
 		80E235D5203DD08A0002E716 /* Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D4203DD08A0002E716 /* Variant.swift */; };
 		80E235D7203DE4120002E716 /* exportData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D6203DE4120002E716 /* exportData.swift */; };
 		80E235D9203DF9E70002E716 /* importData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D8203DF9E70002E716 /* importData.swift */; };
@@ -322,12 +325,15 @@
 		8026274A203B49FE00D15EF5 /* app.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = app.js; sourceTree = "<group>"; };
 		8026274C203B750100D15EF5 /* sendBack.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sendBack.txt; sourceTree = "<group>"; };
 		802F04BE204DAC6000824134 /* MKFrame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MKFrame.xcodeproj; path = MKFrame/MKFrame.xcodeproj; sourceTree = "<group>"; };
+		805F6BF42056BF4900C34C95 /* SkippedPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkippedPopUpViewController.swift; sourceTree = "<group>"; };
+		805F6C032056ED8E00C34C95 /* TextEntryPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEntryPopUpViewController.swift; sourceTree = "<group>"; };
 		807209982046F148000B703F /* variantBin.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = variantBin.txt; sourceTree = "<group>"; };
 		807209A02046F195000B703F /* machineBin.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = machineBin.txt; sourceTree = "<group>"; };
 		807209A22046F1AB000B703F /* checkpointBin.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = checkpointBin.txt; sourceTree = "<group>"; };
 		807FA1D82052DE5500A14156 /* userInfoLoc.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = userInfoLoc.txt; sourceTree = "<group>"; };
 		807FA1DB2052F9B100A14156 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		807FA1DF205306F200A14156 /* TextPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPopUpViewController.swift; sourceTree = "<group>"; };
+		807FA1E120531ED200A14156 /* port.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = port.swift; sourceTree = "<group>"; };
 		80E235D4203DD08A0002E716 /* Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variant.swift; sourceTree = "<group>"; };
 		80E235D6203DE4120002E716 /* exportData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = exportData.swift; sourceTree = "<group>"; };
 		80E235D8203DF9E70002E716 /* importData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = importData.swift; sourceTree = "<group>"; };
@@ -403,7 +409,10 @@
 				80126D3D202E413600B3CFAB /* ViewController.swift */,
 				80E235D6203DE4120002E716 /* exportData.swift */,
 				80E235D8203DF9E70002E716 /* importData.swift */,
+				807FA1E120531ED200A14156 /* port.swift */,
 				80126D3F202E413600B3CFAB /* Main.storyboard */,
+				805F6C032056ED8E00C34C95 /* TextEntryPopUpViewController.swift */,
+				805F6BF42056BF4900C34C95 /* SkippedPopUpViewController.swift */,
 				807FA1DF205306F200A14156 /* TextPopUpViewController.swift */,
 				80E3DEFF20444F2F0048F657 /* PopUpViewController.swift */,
 				80126E1F2031E72D00B3CFAB /* batteryViewController.swift */,
@@ -781,10 +790,13 @@
 				80E235DB203E0E100002E716 /* OMViewController.swift in Sources */,
 				80126E1E2031E4F900B3CFAB /* FinalFCViewController.swift in Sources */,
 				80E235DD203E0E240002E716 /* VariantsViewController.swift in Sources */,
+				805F6C042056ED8E00C34C95 /* TextEntryPopUpViewController.swift in Sources */,
 				80126D3E202E413600B3CFAB /* ViewController.swift in Sources */,
 				80126E15202FA2A600B3CFAB /* Checkpoint.swift in Sources */,
 				80E235D7203DE4120002E716 /* exportData.swift in Sources */,
+				807FA1E220531ED200A14156 /* port.swift in Sources */,
 				80126E13202FA23E00B3CFAB /* PDI.swift in Sources */,
+				805F6BF52056BF4900C34C95 /* SkippedPopUpViewController.swift in Sources */,
 				80126D3C202E413600B3CFAB /* AppDelegate.swift in Sources */,
 				80126E0F202FA15B00B3CFAB /* PDIViewController.swift in Sources */,
 				80126D8B202E472000B3CFAB /* Machine.swift in Sources */,

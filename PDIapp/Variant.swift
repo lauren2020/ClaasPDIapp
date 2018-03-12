@@ -8,6 +8,10 @@
 
 import Foundation
 
+/*
+ * CLASS: Variant
+ * PURPOSE: Is an object that builds the configuration of a variant
+ */
 class Variant
 {
     var num = "123_456"
