@@ -8,36 +8,53 @@
 
 import UIKit
 
-class TextEntryPopUpViewController: UIViewController {
+class TextEntryPopUpViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var messageField: UITextField!
     var message = ""
+    // Callback function 
+    var onNameSet: ((_ name: String) -> ())?
+    
+    /*
+     * FUNCTION: viewDidLoad
+     * PURPOSE: When view is loaded, messageField text field is set as its own delegate
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        messageField.text = message
+        messageField.delegate = self
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
+        return true
+    }
 
+    /*
+     * FUNCTION: okPressed
+     * PURPOSE: When ok is pressed, the name entered by the user is sent back to the parent function through the callback function onNameSet
+     */
     @IBAction func okPressed(_ sender: Any)
     {
-        self.view.removeFromSuperview()
+        message = messageField.text!
+        if(message != "")
+        {
+            onNameSet?(message)
+            self.view.removeFromSuperview()
+        }
+        else
+        {
+            messageField.text = ""
+            messageField.placeholder = "Please Enter Your Name"
+        }
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

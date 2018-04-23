@@ -15,9 +15,15 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
     //holds the name of the individual completeing the current PDI
     var name: String!
     //port for sending data back to database
-    var exportDat: exportData!
+    var Port: port!
+    //indicates whether pressing "X" should open or close drop down menu
     var xtoggle = 0
+    // Icon that indicates background activity to the user
+    var activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView()
     
+    @IBOutlet var loadingView: UIView!
+    @IBOutlet weak var loadingText: UILabel!
+    @IBOutlet weak var thisActivity: UIActivityIndicatorView!
     @IBOutlet weak var machineLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var fuelConsumptionBox: UITextField!
@@ -29,42 +35,90 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        machine.thisPDI.position = "ifc"
 
+        Port.setInitialFuelConsumption(machine: machine)
+        
         fuelConsumptionBox.delegate = self
         
         cancelButton.isHidden = true
         saveButton.isHidden = true
         machineLabel.text = machine.name
-        //name is passed from previous segment
         nameLabel.text = name
-        //exportDat = exportData(machineIn: machine)
         if(machine.thisPDI.initialFuelConsumption != nil)
         {
             fuelConsumptionBox.text = String(format:"%f", machine.thisPDI.initialFuelConsumption)
         }
-        
-        
-       /* tapScreen = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
-        
-        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-        tapScreen.cancelsTouchesInView = false
-        
-        view.addGestureRecognizer(tapScreen)*/
-        
+        activityIndicator = thisActivity
     }
     
+    /*
+     * FUNCTION: startActivity
+     * PURPOSE: Shows the activity indicator and stops recording user touches.
+     */
+    func startActivity()
+    {
+        print("Activity Started")
+        self.view.alpha = 0.5
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+    }
+    /*
+     * FUNCTION: stopActivity
+     * PURPOSE: Hides the activity indicator and resumes responding to user touches
+     */
+    func stopActivity()
+    {
+        print("Activity Stoped")
+        self.view.alpha = 1
+        activityIndicator.stopAnimating()
+        UIApplication.shared.endIgnoringInteractionEvents()
+    }
+    /*
+     * FUNCTION: showLoadingScreen
+     * PURPOSE: Displays the loading view
+     */
+    func showLoadingScreen()
+    {
+        loadingView.isHidden = false
+        loadingView.bounds.size.width = view.bounds.width
+        loadingView.bounds.size.height = view.bounds.height
+        loadingView.center = view.center
+        loadingView.alpha = 1
+        self.view.bringSubview(toFront: loadingView)
+        self.view = loadingView
+        print("Loading screen succeeded")
+    }
+    
+    /*
+     * FUNCTION: touchesBegan
+     * PURPOSE: Is called when touch begins
+     */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
+    /*
+     * FUNCTION: textFieldDidBeginEditing
+     * PURPOSE: If text box editing is started, this function exceutes
+     * PARAMS: textField -> UITextField object for senseing edit
+     */
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.keyboardType = UIKeyboardType.numbersAndPunctuation
+    }
+    /*
+     * FUNCTION: textFieldShouldReturn
+     * PURPOSE: When text field is done editing, resigns responder
+     */
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     
         textField.resignFirstResponder()
         return true
     }
-    /*func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        view.endEditing(true)
-    }*/
   
     /*
      * FUNCTION: nextPressed *
@@ -74,7 +128,6 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
     {
         //When next is pressed, this saves the begining fuel consumption
         let isFilled = fuelConsumptionBox.hasText
-        //let isNumber = CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: fuelConsumptionBox.text!))
         var isDouble = false
         if let lat = fuelConsumptionBox.text,
             let _ = Double(lat) {
@@ -87,19 +140,39 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
         if (isDouble && isFilled)
         {
             machine.thisPDI.setInitialFuelConsumption(fuelConsumptionIn: Double(fuelConsumptionBox.text!)!)
-            exportDat.pushInitialFuelConsumption()
+            Port.pushInitialFuelConsumption()
             self.performSegue(withIdentifier: "FCtoBattery", sender: machine)
         }
         else
         {
             //if fuel consumption entry is empty or not valid, message appears in box
             fuelConsumptionBox.text = ""
-            fuelConsumptionBox.placeholder = "Enter a Number"
+            fuelConsumptionBox.placeholder = "enter a number"
+            unsupportedInput()
         }
     }
-    
+    /*
+     * FUNCTION: unsupportedInput
+     * PURPOSE: If text entered in field is not numeric a pop up window alerts the user and resets the text field
+     */
+    func unsupportedInput()
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textButtonPopUp") as! TextPopUpViewController
+        popOverVC.message = "Please enter a number"
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+        fuelConsumptionBox.text = ""
+    }
+    /*
+     * FUNCTION: xPressed
+     * PURPOSE: When "X" button is pressed, displays a drop down menu with the options to "Cancel" or "Save & Exit"
+     */
     @IBAction func xPressed(_ sender: Any)
     {
+        view.bringSubview(toFront: cancelButton)
+        view.bringSubview(toFront: saveButton)
+        
         if(xtoggle == 0)
         {
             cancelButton.isHidden = false
@@ -113,7 +186,10 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
             xtoggle = 0
         }
     }
-    
+    /*
+     * FUNCTION: saveExitPressed
+     * PURPOSE: If the "Save & Exit" button is pressed, inspectedMachines object stays in database and pdiStatus remains set to "2", user is redirected to home screen
+     */
     @IBAction func saveExitPressed(_ sender: Any)
     {
         let isFilled = fuelConsumptionBox.hasText
@@ -126,15 +202,25 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
         {
             isDouble = false
         }
-        if (isDouble && isFilled)
-        {
-            machine.thisPDI.setInitialFuelConsumption(fuelConsumptionIn: Double(fuelConsumptionBox.text!)!)
-            exportDat.pushInitialFuelConsumption()
+        
+        showLoadingScreen()
+        startActivity()
+        
+        loadingText.text = "Saving PDI..."
+        DispatchQueue.global().async {
+            
+            if (isDouble && isFilled)
+            {
+                self.machine.thisPDI.setInitialFuelConsumption(fuelConsumptionIn: Double(self.fuelConsumptionBox.text!)!)
+                self.Port.pushInitialFuelConsumption()
+            }
+            self.Port.setReturnPos(pos: "ifc")
+            self.Port.macStatus(status: 2)
+            DispatchQueue.main.async {
+                self.stopActivity()
+                self.performSegue(withIdentifier: "fcCancelToMain", sender: self.machine)
+            }
         }
-        exportDat.setReturnPos(pos: "ifc")
-        exportDat.setActiveStatus(activeStat: 0)
-        exportDat.macStatus(status: 2)
-        self.performSegue(withIdentifier: "fcCancelToMain", sender: machine)
     }
     
     
@@ -144,9 +230,19 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
     */
     @IBAction func cancelPressed(_ sender: Any)
     {
-        exportDat.removeInspected()
-        exportDat.macStatus(status: 0)
-        self.performSegue(withIdentifier: "fcCancelToMain", sender: machine)
+        showLoadingScreen()
+        startActivity()
+        
+        loadingText.text = "Canceling PDI..."
+        DispatchQueue.global().async {
+            
+            self.Port.removeInspected()
+            self.Port.macStatus(status: 0)
+            DispatchQueue.main.async {
+                self.stopActivity()
+                self.performSegue(withIdentifier: "fcCancelToMain", sender: self.machine)
+            }
+        }
     }
     
     /*
@@ -160,7 +256,7 @@ class FuelConsumptionViewController: UIViewController, UITextFieldDelegate
             if let vc = segue.destination as? batteryViewController {
                 vc.machine = self.machine
                 vc.name = self.name
-                vc.exportDat = self.exportDat
+                vc.Port = self.Port
             }
         }
     }

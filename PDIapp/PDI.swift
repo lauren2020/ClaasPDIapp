@@ -10,7 +10,7 @@ import Foundation
 
 /*
  * CLASS: PDI
- * PURPOSE: Is an object that builds the configuration of a PDI
+ * PURPOSE: Is an object that builds that holds all of the information within a given machine inspection
  */
 class PDI
 {
@@ -18,12 +18,25 @@ class PDI
     var finalFuelConsumption: Double!
     var name: String!
     
+    var omBank = [OM(dbIdentifierIn: "ommMain", displayNameIn: "OMM Main"), OM(dbIdentifierIn: "ommSupp", displayNameIn: "OMM Supp"), OM(dbIdentifierIn: "ommUnload", displayNameIn: "OMM Unload")]
     var OMMain = ""
     var OMSupp = ""
     var OMFitting = ""
     var OMCemos = ""
     var OMTeraTrack = ""
     var OMProfiCam = ""
+    var OMTouch = ""
+    var OMDual = ""
+    var position = "ifc"
+    var vcs = [PDIView(vcIn: FuelConsumptionViewController(), backSegueIn: "none", nextSegueIn: "FCtoBattery", toMainSegueIn: "fcCancelToMain"), PDIView(vcIn: batteryViewController(), backSegueIn: "batteryBackToFC", nextSegueIn: "batteryToOm", toMainSegueIn: "batteryCancelToMain"), PDIView(vcIn: OMViewController(), backSegueIn: "OMBackToBattery", nextSegueIn: "omToVariants", toMainSegueIn: "omCancelToMain"), PDIView(vcIn: VariantsViewController(), backSegueIn: "VariantsBackToOM", nextSegueIn: "variantsToCheckpoint", toMainSegueIn: "variantsCancelToMain"), PDIView(vcIn: PDIViewController(), backSegueIn: "CheckpointsBackToVariants", nextSegueIn: "checkpointsToFinalFC", toMainSegueIn: "checkpointsCancelToMain"), PDIView(vcIn: FinalFCViewController(), backSegueIn: "FFCBackToCheckpoints", nextSegueIn: "none", toMainSegueIn: "ffcToMain")]
+   // var vcs = [FuelConsumptionViewController(), batteryViewController(), OMViewController(), VariantsViewController(), PDIViewController(), FinalFCViewController()]
+   // var segue = ["FCtoBattery", "batteryToOm", "omToVariants", "variantsToCheckpoint", "checkpointsToFinalFC"]
+    
+    var hasCemos = false
+    var hasTeraTrack = false
+    var hasProfiCam = false
+    var hasTouch = false
+    var hasDual = false
     
     //Hold battery entries
     //[0] = CCA, [1] = Volt
@@ -33,7 +46,10 @@ class PDI
     var G004 = ["",""]
     var MAN1 = ["",""]
     var MAN2 = ["",""]
-    var completedBy: String!
+    var batteryIssues = [Array<String>()]
+    var completedBy = "name"
+    
+    var newIssuesBank = [Issue!]()
     
     //0 = Incomplete, 1 = In Progress, 2 = Complete
     var status = 0
@@ -50,11 +66,12 @@ class PDI
     //Holds responses to variants
     //0 = not answered, 1 = ok, 2 = notOk
     var variantResponseBank = [Int]()
-    var quesitonIssueBank = [String]()
+    var questionIssueBank = [Checkpoint]()
+    var variantIssueBank = [Variant]()
     
-    var skipped: [Variant]!
-    var skippedPos: [Int]!
-    var skippedResponseBank: [Int]!
+    var skippedVariantBank = [SkippedVariant]()
+    var skippedCheckpointBank = [SkippedCheckpoint]()
+    
     var currentSkipped = 0;
     var noSkippedVariants = false
     var noSkippedCheckpoints = false
@@ -63,6 +80,9 @@ class PDI
     init(name: String)
     {
         self.name = name
+        omBank[0].included = true
+        omBank[1].included = true
+        omBank[2].included = true
     }
     
     func setInitialFuelConsumption(fuelConsumptionIn: Double)
@@ -108,9 +128,5 @@ class PDI
                 variantResponseBank.append(0)
             }
         }
-       /* for _ in 0...variantBank.count - 1
-        {
-            variantResponseBank.append(0)
-        }*/
     }
 }
