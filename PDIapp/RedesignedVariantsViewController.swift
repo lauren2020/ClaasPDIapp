@@ -1,23 +1,21 @@
 //
-//  VariantsViewController.swift
+//  RedesignedVariantsViewController.swift
 //  PDIapp
 //
-//  Created by Lauren Shultz on 2/21/18.
+//  Created by Lauren Shultz on 3/29/18.
 //  Copyright © 2018 Lauren Shultz. All rights reserved.
 //
 
 import UIKit
 
-class VariantsViewController: UIViewController, UITextFieldDelegate
+class RedesignedVariantsViewController: UIViewController, UITextFieldDelegate
 {
+
     //indicates whether meassage bar should be configured to "Add an Issue" or "Send Meassage to Wash Bay"
     var toggle = 0
     //indicates whether pressing "X" should open or close drop down menu
     var xtoggle = 0
-    
-    //DEPRECEATED
-    //var skipToggle = 0
-    
+    var skipToggle = 0
     //holds the current machine being checked
     var machine: Machine!
     //holds the name of the individual completeing the current PDI
@@ -30,22 +28,8 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     var type = 0;
     //indicates whether type should be changed for next question or not
     var changeType = false
-    // Holds the image to be appened to the new issue when submitted
-    var thisImage: UIImage!
-    // Holds the message to be sent when new issue is created
-    var thisMessage = ""
-    // Icon that indicates background activity to user
-    var activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView()
-    // Image for button when it is selected
-    let selected = UIImage(named: "selectedButton2") as UIImage?
-    // Image for button when it is unselected
-    let notSelected = UIImage(named: "EmptyButton") as UIImage?
     
     //Object access identifiers
-    @IBOutlet weak var loadingText: UILabel!
-    @IBOutlet weak var thisActivity: UIActivityIndicatorView!
-    @IBOutlet var loadingView: UIView!
-    @IBOutlet weak var issueImage: UIImageView!
     @IBOutlet weak var machineLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var number: UILabel!
@@ -55,6 +39,9 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     @IBOutlet weak var messageField: UITextField!
     @IBOutlet weak var currentNumberTag: UILabel!
     @IBOutlet weak var totalNumberTag: UILabel!
+    let selected = UIImage(named: "selectedButton2") as UIImage?
+    let notSelected = UIImage(named: "EmptyButton") as UIImage?
+    
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var notOkButton: UIButton!
@@ -62,15 +49,12 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     @IBOutlet weak var xButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
-    @IBOutlet weak var skippedButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Do any additional setup after loading the view.
         print("VariantsView Loaded")
-        
-        machine.thisPDI.position = "var"
-        
         messageField.delegate = self
         
         if(!Port.variantsArrayExists())
@@ -82,6 +66,13 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         {
             print("Variants array exists, loading existing variants...")
             Port.setVariantsResponses2(cpId: "fackeId")
+            /* for index in 0 ..< machine.thisPDI.questionResponseBank.count
+             {
+             if(machine.thisPDI.questionResponseBank[index] == 0)
+             {
+             machine.thisPDI.skippedCheckpoints.append(machine.thisPDI.checkpointBank[index])
+             }
+             }*/
         }
         print("Responses Set")
         cancelButton.isHidden = true
@@ -100,31 +91,15 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             print("ERROR GENERATEING NEXT QUESTION")
         }
     }
-    @IBAction func addImage(_ sender: Any)
-    {
-        /*CameraHandler.shared.showActionSheet(vc: self)
-        CameraHandler.shared.imagePickedBlock = { (image) in
-            self.issueImage.image = image
-            self.thisImage = image
-            self.issueImage.isHidden = false
-        }*/
-    }
-    /*
-     * FUNCTION: touchesBegan
-     * PURPOSE: Is called when touch begins
-     */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
-    /*
-     * FUNCTION: textFieldShouldReturn
-     * PURPOSE: When text field is done editing, resigns responder
-     */
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         textField.resignFirstResponder()
         return true
     }
+    //Add action fieldOpened() --> callWritePopUp()
     
     /*
      * FUNCTION: okPressed
@@ -184,15 +159,20 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         print("Toggle Set to: ", toggle)
     }
-    /*
-     * FUNCTION: showList
-     * PURPOSE: Calls a pop up window that will display the current user added issue in the pdi
-     */
     @IBAction func showList(_ sender: Any)
     {
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "newIssuesPopUp") as! newIssuesPopUpViewController
         popOverVC.Port = Port
         popOverVC.machine = machine
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+    }
+    @IBAction func addIssuePopUp(_ sender: Any)
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddIssuePopUp") as! AddIssuePopUpViewController
+        popOverVC.Port = Port
+        //popOverVC.machine = machine
         self.addChildViewController(popOverVC)
         self.view.addSubview(popOverVC.view)
         popOverVC.didMove(toParentViewController: self)
@@ -207,77 +187,16 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         if(toggle == 0)
         {
             //Add issue
-            if(thisImage != nil)
-            {
-                thisMessage = messageField.text!
-                DispatchQueue.global().async {
-                    
-                    self.Port.addIssue2(issueIdentifier: "This identifier", issue: self.thisMessage, image: self.thisImage)
-                    self.thisImage = nil
-                    
-                    DispatchQueue.main.async {
-                        self.stopActivity()
-                    }
-                }
-            }
-            else
-            {
-                Port.addIssue(issueIdentifier: "This identifier", issue: messageField.text!)
-                self.stopActivity()
-            }
-            issueImage.isHidden = true
+            Port.addIssue(issueIdentifier: "This identifier", issue: messageField.text!)
             print("ADDED ISSUE")
         }
         else
         {
             //Send Message to wash bay
             Port.sendMessageToWashBay(message: messageField.text!)
-            self.stopActivity()
             print("SENT MESSAGE TO WASH BAY")
         }
         messageField.text = ""
-    }
-    /*
-     * FUNCTION: startActivity
-     * PURPOSE: Shows the activity indicator and stops recording user touches.
-     */
-    func startActivity()
-    {
-        print("Activity Started")
-        self.view.alpha = 0.5
-        activityIndicator.center = self.view.center
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
-        UIApplication.shared.beginIgnoringInteractionEvents()
-    }
-    /*
-     * FUNCTION: stopActivity
-     * PURPOSE: Hides the activity indicator and resumes responding to user touches
-     */
-    func stopActivity()
-    {
-        print("Activity Stopped")
-        self.view.alpha = 1
-        activityIndicator.stopAnimating()
-        UIApplication.shared.endIgnoringInteractionEvents()
-    }
-    /*
-     * FUNCTION: showLoadingScreen
-     * PURPOSE: Displays the loading view
-     */
-    func showLoadingScreen()
-    {
-        loadingView.isHidden = false
-        loadingView.bounds.size.width = view.bounds.width
-        loadingView.bounds.size.height = view.bounds.height
-        loadingView.center = view.center
-        loadingView.alpha = 1
-        //self.view.backgroundColor = UIColor.blue.withAlphaComponent(0.8)
-        self.view.bringSubview(toFront: loadingView)
-        self.view = loadingView
-        print("Loading screen succeeded")
     }
     /*
      * FUNCTION: nextPressed
@@ -286,44 +205,26 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     @IBAction func nextPressed(_ sender: Any)
     {
         print("Next Pressed")
-       if(userInSkippedBank())
-       {
-            print("Saving Response in Skipped bank...")
-        machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].response = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
-        
-        Port.setQuestionStatus(status: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].response, type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].num)
-        
+        machine.thisPDI.variantResponseBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position] = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
             Port.updateSingleResponse(type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position)
-        
             if(machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response != 0)
             {
                 removeFromSkipped(index: machine.thisPDI.currentSkipped)
             }
-            if(machine.thisPDI.skippedVariantBank.count != 0 && machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response != 0)
-            {
-                //THIS IS BEING DONE TWICE, REVISE
-            machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].response = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
-                removeFromSkipped(index: machine.thisPDI.currentSkipped)
-            }
-        }
-       else
-       {
-            print("Saving Response in main bank...")
-            Port.setQuestionStatus(status: machine.thisPDI.variantBank[machine.thisPDI.thisQuestion].response, type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.thisQuestion].num)
-            Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[machine.thisPDI.thisQuestion].num, issueType: 0)
-        }
-    
-        if(Port.verifyCompletion(type: 0)/*allVariantsAnswered()*/)
+        if(type == 1 && machine.thisPDI.skippedVariantBank.count != 0 && machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response != 0)
         {
-            print("********** ALL VARIANTS ARE ANSWERED ************")
-            machine.thisPDI.noSkippedVariants = true
+            machine.thisPDI.variantResponseBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position] = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
+            removeFromSkipped(index: machine.thisPDI.currentSkipped)
+        }
+        if(!allVariantsAnswered())
+        {
+            machine.thisPDI.noSkippedVariants = false
         }
         else
         {
-            print("********** SOME VARIANTS ARE STILL SKIPPED ************")
-            machine.thisPDI.noSkippedVariants = false
+            machine.thisPDI.noSkippedVariants = true
         }
-        //Port.pushVariants()
+        Port.pushVariants()
         self.performSegue(withIdentifier: "variantsToCheckpoint", sender: machine)
     }
     /*
@@ -334,16 +235,14 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     func allVariantsAnswered() -> Bool
     {
         var answered = true
-        if(machine.thisPDI.skippedVariantBank.count != 0)
-        {
-            answered = false
+        for index in 0 ..< machine.thisPDI.variantResponseBank.count{
+            if(machine.thisPDI.variantResponseBank[index] == 0)
+            {
+                answered = false
+            }
         }
         return answered
     }
-    /*
-     * FUNCTION: moreInfoPressed
-     * PURPOSE: Displays a pop up window with more information on the current variant
-     */
     @IBAction func moreInfoPressed(_ sender: Any)
     {
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "moreInfoPopUP") as! PopUpViewController
@@ -367,43 +266,13 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     @IBAction func backVariantPressed(_ sender: Any)
     {
         print("Back Variant Pressed")
+        nextButton.isHidden = false
         if(!userInSkippedBank())
         {
-            let positionInMain = machine.thisPDI.thisQuestion
             decrementThisQuestion()
-            
-            if(lastQuestionIn(bank: 0, isAt: machine.thisPDI.thisQuestion) && machine.thisPDI.skippedVariantBank.count == 0)
-            {
-                nextButton.isHidden = true
-            }
-            else
-            {
-                nextButton.isHidden = false
-            }
-            
             if(machine.thisPDI.thisQuestion == 0)
             {
                 backButton.isHidden = true
-            }
-            
-            
-            
-            Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain].response, type: 0, id: machine.thisPDI.variantBank[positionInMain].num)
-            Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[positionInMain].num, issueType: 0)
-            if(machine.thisPDI.variantBank[positionInMain].response != 0)
-            {
-                if(variantInSkipped(variantPosition: positionInMain))
-                {
-                    for location in 0 ..< machine.thisPDI.skippedVariantBank.count
-                    {
-                        if(machine.thisPDI.thisQuestion == machine.thisPDI.skippedVariantBank[location].position)
-                        {
-                            removeFromSkipped(index: location)
-                            print("REMOVED SKIPPED VARIANT AT: ", location)
-                            break
-                        }
-                    }
-                }
             }
             let success = genQuestion()
             if(!success)
@@ -413,41 +282,23 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         else
         {
-            let positionInMain = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position
-           let thisResponse = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
-            machine.thisPDI.variantBank[positionInMain!].response = thisResponse
-            
+        machine.thisPDI.variantResponseBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position] = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
             Port.updateSingleResponse(type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position)
             if(!unanswered(atPosition: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position))
             {
-                Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain!].response, type: 0, id: machine.thisPDI.variantBank[positionInMain!].num)
-                Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[positionInMain!].num, issueType: 0)
                 removeFromSkipped(index: machine.thisPDI.currentSkipped)
-            }
-            else
-            {
-                if(machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response != 0)
-                {
-                    removeFromSkipped(index: machine.thisPDI.currentSkipped)
-                }
             }
             
             if(machine.thisPDI.currentSkipped == 0)
             {
                 switchQuestionBanks()
-                machine.thisPDI.thisQuestion = machine.thisPDI.variantBank.count - 1
-                let success = genQuestion()
-                if(!success)
-                {
-                    print("ERROR GENERATEING NEXT QUESTION")
-                }
+                //decrementThisQuestion()
             }
             else
             {
                 decrementCurrentSkipped()
-                genSkippedQuestion()
             }
-            
+            genSkippedQuestion()
         }
     }
     /*
@@ -473,11 +324,12 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             }
             else
             {
-                machine.thisPDI.skippedVariantBank.append(machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped])
+            machine.thisPDI.skippedVariantBank.append(machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped])
                 removeFromSkipped(index: machine.thisPDI.currentSkipped)
             }
             if(notOk(atPosition: positionInMain!))
             {
+                //Port.setQuestionStatus(status: 2, type: 0, id: machine.thisPDI.variantBank[positionInMain!].num)
                 addIssueToDB(fromPosition: positionInMain!)
             }
         }
@@ -503,6 +355,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             }
             if(notOk(atPosition: machine.thisPDI.thisQuestion))
             {
+                //Port.setQuestionStatus(status: 2, type: 0, id: machine.thisPDI.variantBank[positionInMain].num)
                 addIssueToDB(fromPosition: positionInMain)
             }
         }
@@ -521,13 +374,13 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             }
             else
             {
+                //REMOVED FROM BEGINNING machine.thisPDI.skippedVariantBank == nil ||
                 if(machine.thisPDI.skippedVariantBank.count == 0)
                 {
                     nextButton.isHidden = true
                 }
                 else
                 {
-                    print("CHANGEING TYPE")
                     changeType = true
                 }
             }
@@ -542,19 +395,13 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             nextButton.isHidden = true
             genSkippedQuestion()
         }
-        else
-        {
-            genSkippedQuestion()
-        }
     }
     /*
      * FUNCTION: genQuestion
      * PURPOSE: Generates a new variant
-     * RETURNS: true if generation was successful and false if an error was encountered
      */
     func genQuestion() -> Bool
     {
-        print("***---------------------------------------------------------***")
         print("Generateing Question")
         
         if(machine.thisPDI.variantBank.count != 0)
@@ -616,7 +463,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
      */
     func genSkippedQuestion()
     {
-        print("***---------------------------------------------------------***")
         print("Generateing Skipped Question...")
         if(machine.thisPDI.skippedVariantBank.count != 0)
         {
@@ -666,6 +512,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     {
         print("Checking if variant is in skipped bank...")
         var inSkipped = false
+        //CHANGED FROM machine.thisPDI.skippedVariantBank != nil
         if(machine.thisPDI.skippedVariantBank.count != 0)
         {
             for index in 0 ..< machine.thisPDI.skippedVariantBank.count
@@ -678,6 +525,15 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             }
         }
         return inSkipped
+    }
+    /*
+     * FUNCTION: addToSkipped
+     * PURPOSE: Adds a new variant to the skipped list and tracks the position of that variable in the variant list
+     * VARIABLES: Variant skippedVariant = variant that was not answered
+     *            Int position = position of variant in variant list
+     */
+    func addToSkipped(skippedVariant: Variant, position: Int)
+    {
     }
     /*
      * FUNCTION: removeFromSkipped
@@ -694,7 +550,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
      */
     @IBAction func skippedPressed(_ sender: Any)
     {
-        refreshSkipped()
         print("Skipped button was pressed...")
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "skippedPopUp") as! SkippedPopUpViewController
         popOverVC.type = 0
@@ -705,16 +560,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         popOverVC.didMove(toParentViewController: self)
         popOverVC.onJumpPressed = onJumpPressed
     }
-    func refreshSkipped()
-    {
-        Port.refreshList(type: 0)
-        machine.thisPDI.skippedVariantBank = Port.skippedVariantArray
-    }
-    /*
-     * FUNCTION: onJumpPressed
-     * PURPOSE: Callback function that is executed upon skipped list pop up window being closed to relay the selcted position to move to
-     * PARAMS: jumpPos -> Position to move to in the main bank
-     */
     func onJumpPressed(_ jumpPos: Int)
     {
         print("Jumping to: ", jumpPos)
@@ -728,7 +573,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             {
                 backButton.isHidden = false
             }
-            type = 0
             machine.thisPDI.currentSkipped = 0
             machine.thisPDI.thisQuestion = jumpPos
             let success = genQuestion()
@@ -738,47 +582,26 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             }
         }
     }
-    /*
-     * FUNCTION: incrementCurrentSkipped
-     * PURPOSE: Increases the value of currentSkipped by 1
-     */
     func incrementCurrentSkipped()
     {
         machine.thisPDI.currentSkipped += 1
         print("Current Skipped ++: ", machine.thisPDI.currentSkipped)
     }
-    /*
-     * FUNCTION: decrementCurrentSkipped
-     * PURPOSE: Decreases the value of currentSkipped by 1
-     */
     func decrementCurrentSkipped()
     {
         machine.thisPDI.currentSkipped -= 1
         print("Current Skipped --: ", machine.thisPDI.currentSkipped)
     }
-    /*
-     * FUNCTION: incrementThisQuestion
-     * PURPOSE: Increases the value of thisQuestion by 1
-     */
     func incrementThisQuestion()
     {
         machine.thisPDI.thisQuestion += 1
         print("This Question ++: ", machine.thisPDI.thisQuestion)
     }
-    /*
-     * FUNCTION: decrementThisQuestion
-     * PURPOSE: Decreases the value of thisQuestion by 1
-     */
     func decrementThisQuestion()
     {
         machine.thisPDI.thisQuestion -= 1
         print("This Question --: ", machine.thisPDI.thisQuestion)
     }
-    /*
-     * FUNCTION: userInSkippedBank
-     * PURPOSE: Checks if the user is in the skipped bank
-     * RETURNS: true if user is currently in the skipped bank and false if they are in the main bank
-     */
     func userInSkippedBank() -> Bool
     {
         print("Checking if user is in skipped bank...")
@@ -790,12 +613,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         return inSkipped
     }
-    /*
-     * FUNCTION: unanswered
-     * PURPOSE: Checks if the indicated variant has been answered
-     * PARAMS: atPosition -> Position of the variant in the main bank to be checked
-     * RETURNS: true if the variant has not been answered and false if it has an answer
-     */
     func unanswered(atPosition: Int) -> Bool
     {
         print("Checking if question is unanswered...")
@@ -807,12 +624,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         return unanswered
     }
-    /*
-     * FUNCTION: notOk
-     * PURPOSE: Checks to see if the indicated variant is not ok
-     * PARAMS: atPosition -> Position in the main bank of the variant whose response is to be checked
-     * RETURNS: true if the response is not ok and false if the response is anything else
-     */
     func notOk(atPosition: Int) -> Bool
     {
         print("Checking if response is not ok...")
@@ -824,10 +635,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         return notOk
     }
-    /*
-     * FUNCTION: switchQuestionBanks
-     * PURPOSE: Switches the bank being traversed to which ever one the user is not currently in
-     */
     func switchQuestionBanks()
     {
         if(type == 0)
@@ -841,34 +648,16 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             print("USER IS NOW IN MAIN BANK")
         }
     }
-    /*
-     * FUNCTION: setResponse
-     * PURPOSE: Sets the response of the variant at the given position to the given response
-     * PARAMS: atPosition -> Position of variant to set response of in main bank
-     *         to -> Response to be assigned to the given variant
-     */
     func setResponse(atPosition: Int, to: Int)
     {
         print("Setting response at: ", atPosition, " to:", to)
         machine.thisPDI.variantBank[atPosition].response = to
     }
-    /*
-     * FUNCTION: response
-     * PURPOSE: Returns the response to the variant at the given position in the main bank
-     * PARAMS: atPosition -> position of desired response
-     * RETURNS: the response to the variant at the given position
-     */
     func response(atPosition: Int) -> Int
     {
         print("Getting response...")
         return machine.thisPDI.variantBank[atPosition].response
     }
-    /*
-     * FUNCTION: lastQuestionIn
-     * PURPOSE: Checks if the given position is the last quetion in  the indicated bank
-     * PARAMS: bank -> indicates whether to check the main bank or the skipped bank
-     *          isAt -> Position in bank to check
-     */
     func lastQuestionIn(bank: Int, isAt: Int) -> Bool
     {
         print("Checking if question is last...")
@@ -877,7 +666,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         {
             if(isAt == machine.thisPDI.variantBank.count - 1)
             {
-                print("LAST QUESTION FOUND AT: ", isAt)
                 lastQuestion = true
             }
             else if(isAt > machine.thisPDI.variantBank.count - 1)
@@ -898,11 +686,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         return lastQuestion
     }
-    /*
-     * FUNCTION: checkBoundsOf
-     * PURPOSE: Checks to see if the current position is in bounds of the indicated bank
-     * PARAMS: bank -> indicates whether the main banks bounds are to be checked or the skipped banks bounds
-     */
     func checkBoundsOf(bank: Int) -> Bool
     {
         print("Checking bounds...")
@@ -933,17 +716,25 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         return inBounds
     }
-    /*
-     * FUNCTION: addIssueToDB
-     * PURPOSE: Adds a variant issue to the machineCongigIssues array in the database and in the local issue bank
-     * PARAMS: fromPosition -> Position in the main variant bank of variant to be added to the issues array
-     */
     func addIssueToDB(fromPosition: Int)
     {
         machine.thisPDI.variantIssueBank.append(machine.thisPDI.variantBank[fromPosition])
         Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[fromPosition].num, issueType: 0)
         Port.addOneVariant(issue: machine.thisPDI.variantBank[fromPosition])
     }
+    /*
+     * FUNCTION: callWritePopUP
+     * PURPOSE: Brings up a pop up box with a text field so user can see what they are typing while keyboard covers message box.
+     */
+    /*func callWritePopUp()
+     {
+     let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textEntryPopUp") as! TextEntryPopUpViewController
+     popOverVC.message = messageField.text!
+     self.addChildViewController(popOverVC)
+     self.view.addSubview(popOverVC.view)
+     popOverVC.didMove(toParentViewController: self)
+     messageField.text = popOverVC.message
+     }*/
     /*
      * FUNCTION: textFieldDidBeginEditing
      * PURPOSE: If text box editing is started, this function exceutes
@@ -991,9 +782,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
      */
     @IBAction func xPressed(_ sender: Any)
     {
-        view.bringSubview(toFront: cancelButton)
-        view.bringSubview(toFront: saveButton)
-        
         if(xtoggle == 0)
         {
             cancelButton.isHidden = false
@@ -1013,19 +801,11 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
      */
     @IBAction func saveExitPressed(_ sender: Any)
     {
-        activityIndicator = thisActivity
-        showLoadingScreen()
-        loadingText.text = "Saving PDI..."
-        startActivity()
-        DispatchQueue.global().async {
-            
-            self.Port.setReturnPos(pos: "var")
-            self.Port.macStatus(status: 2)
-            DispatchQueue.main.async {
-                self.stopActivity()
-                self.performSegue(withIdentifier: "variantsCancelToMain", sender: self.machine)
-            }
-        }
+        //export
+        Port.setReturnPos(pos: "var")
+        //Port.setActiveStatus(activeStat: 0)
+        Port.macStatus(status: 2)
+        self.performSegue(withIdentifier: "variantsCancelToMain", sender: machine)
     }
     /*
      * FUNCTION: backPagePressed
@@ -1043,19 +823,10 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     @IBAction func cancelPressed(_ sender: Any)
     {
         print("Cancel Pressed")
-        activityIndicator = thisActivity
-        showLoadingScreen()
-        loadingText.text = "Canceling PDI..."
-        startActivity()
-        DispatchQueue.global().async {
-            
-            self.Port.removeInspected()
-            self.Port.macStatus(status: 0)
-            DispatchQueue.main.async {
-                self.stopActivity()
-                self.performSegue(withIdentifier: "variantsCancelToMain", sender: self.machine)
-            }
-        }
+        //export
+        Port.removeInspected()
+        Port.macStatus(status: 0)
+        self.performSegue(withIdentifier: "variantsCancelToMain", sender: machine)
     }
     /*
      * FUNCTION: preare
@@ -1068,6 +839,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             if let vc = segue.destination as? PDIViewController {
                 vc.machine = self.machine
                 vc.name = self.name
+                //export
                 vc.Port = self.Port
             }
         }
@@ -1075,6 +847,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             if let vc = segue.destination as? OMViewController {
                 vc.machine = self.machine
                 vc.name = self.name
+                //export
                 vc.Port = self.Port
             }
         }
@@ -1084,4 +857,5 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 }

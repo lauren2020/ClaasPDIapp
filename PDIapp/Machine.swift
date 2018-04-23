@@ -7,14 +7,19 @@
 //
 
 import Foundation
+
+/*
+ * CLASS: Machine
+ * PURPOSE: Machine is an object that holds all of the information pertaining to a given machine
+ */
 class Machine
 {
     //_id
     var id: String!
     //machineId
     var name: String!
-    var thisPDI: PDI! // = PDI(name: "default")//
-    var configuration = ["MD_B06_0010", "MD_B10_0037", "MD_B12_0020"]//[String]()
+    var thisPDI: PDI!
+    var configuration = [String?]()
     var po2Config = 0764
     var completedBy: String!
     

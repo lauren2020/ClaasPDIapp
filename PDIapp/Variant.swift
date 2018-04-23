@@ -8,10 +8,23 @@
 
 import Foundation
 
+/*
+ * CLASS: Variant
+ * PURPOSE: Is an object that holds all the information within a given variant
+ */
 class Variant
 {
     var num = "123_456"
     var message: String!
+    var id = "s233jfkf345kk"
+    var listPosition = 0
+    
+    var response = 0 //Unanswered
+    var skipped = false
+    
+    
+    var moreInfo = "MORE INFO GOES HERE"
+    var imageURL = "https://dingo.care2.com/pictures/greenliving/1407/1406075.large.jpg"
     
     init(numIn: String, messageIn: String)
     {
