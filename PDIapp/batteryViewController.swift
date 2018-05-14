@@ -45,6 +45,8 @@ class batteryViewController: UIViewController, UITextFieldDelegate
     var activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView()
     
     //Object access identifiers
+    @IBOutlet weak var refreshButton: UIButton!
+    @IBOutlet weak var checkConnectionButton: UIButton!
     @IBOutlet var loadingView: UIView!
     @IBOutlet weak var thisActivity: UIActivityIndicatorView!
     @IBOutlet weak var loadingText: UILabel!
@@ -98,6 +100,8 @@ class batteryViewController: UIViewController, UITextFieldDelegate
         //initialize screen elements
         cancelButton.isHidden = true
         saveButton.isHidden = true
+        refreshButton.isHidden = true
+        checkConnectionButton.isHidden = true
         machineLabel.text = machine.name
         nameLabel.text = name
         
@@ -121,12 +125,47 @@ class batteryViewController: UIViewController, UITextFieldDelegate
      */
     @IBAction func addImage(_ sender: Any)
     {
-        /*CameraHandler.shared.showActionSheet(vc: self)
+        CameraHandler.shared.showActionSheet(vc: self)
         CameraHandler.shared.imagePickedBlock = { (image) in
-            self.issueImage.image = image
             self.thisImage = image
             self.issueImage.isHidden = false
-        }*/
+            self.openEditor()
+        }
+    }
+    /*
+     * FUNCTION: openEditor
+     * PURPOSE: Opens a screen with the current image displayed and access to editing tools
+     */
+    func openEditor()
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "imageEditor") as! ImageEditorViewController
+        popOverVC.currentImage = self.thisImage
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+        popOverVC.onEditorClosed = onEditorClosed
+    }
+    /*
+     * FUNCTION: compressImage
+     * PURPOSE: Compresses the image to reduce the size for storage
+     */
+    func compressImage(image: UIImage)
+    {
+            if let imageData = image.jpeg(.lowest)
+            {
+                print(imageData.count, "Bytes")
+                thisImage = UIImage(data: imageData)!
+            }
+    }
+    /*
+     * FUNCTION: onEditorClosed
+     * PURPOSE: Callback function called when image editor closed that updates the current image to the edited image
+     */
+    func onEditorClosed(_ image: UIImage)
+    {
+        thisImage = image
+        compressImage(image: image)
+        issueImage.image = thisImage
     }
     /*
      * FUNCTION: touchesBegan
@@ -204,7 +243,7 @@ class batteryViewController: UIViewController, UITextFieldDelegate
     }
     /*
      * FUNCTION: textFieldDidEndEditing
-     * PURPOSE: If text box editing is ended, this function exceutes
+     * PURPOSE: If text box editing is ended, the current text is checked for compliance with constraints
      * PARAMS: textField -> UITextField object for senseing edit
      */
     func textFieldDidEndEditing(_ textField: UITextField)
@@ -667,17 +706,25 @@ class batteryViewController: UIViewController, UITextFieldDelegate
     {
         view.bringSubview(toFront: cancelButton)
         view.bringSubview(toFront: saveButton)
+        view.bringSubview(toFront: checkConnectionButton)
+        //view.bringSubview(toFront: refreshButton)
         
         if(xtoggle == 0)
         {
+            // Menu is currently closed, opens menu
             cancelButton.isHidden = false
             saveButton.isHidden = false
+            checkConnectionButton.isHidden = false
+            //refreshButton.isHidden = false
             xtoggle = 1
         }
         else
         {
+            // Menu is currently open, hides menu
             cancelButton.isHidden = true
             saveButton.isHidden = true
+            checkConnectionButton.isHidden = true
+            //refreshButton.isHidden = true
             xtoggle = 0
         }
     }
@@ -691,6 +738,7 @@ class batteryViewController: UIViewController, UITextFieldDelegate
         showLoadingScreen()
         loadingText.text = "Saving PDI..."
         startActivity()
+        loadingView.alpha = 1
         DispatchQueue.global().async {
             
             self.saveEntries()
@@ -721,8 +769,9 @@ class batteryViewController: UIViewController, UITextFieldDelegate
         print("Cancel Pressed")
         activityIndicator = thisActivity
         showLoadingScreen()
-        loadingText.text = "Saving PDI..."
+        loadingText.text = "Canceling PDI..."
         startActivity()
+        loadingView.alpha = 1
         DispatchQueue.global().async {
             
             self.Port.removeInspected()
@@ -732,6 +781,49 @@ class batteryViewController: UIViewController, UITextFieldDelegate
                 self.performSegue(withIdentifier: "batteryCancelToMain", sender: self.machine)
             }
         }
+    }
+    /*
+     * FUNCTION: checkConnectionPressed
+     * PURPOSE: Calls refresh when checkconnection button is pressed
+     */
+    @IBAction func checkConnectionPressed(_ sender: Any) {
+        refresh()
+    }
+    /*
+     * FUNCTION: refresh
+     * PURPOSE: Attempts to reconnect to the database
+     */
+    func refresh()
+    {
+        startActivity()
+        DispatchQueue.global().async
+            {
+                self.Port.reconnect()
+                DispatchQueue.main.async {
+                    self.stopActivity()
+                    if(self.Port.connected())
+                    {
+                        self.showMessage(output: "Connected to Database")
+                    }
+                    else
+                    {
+                        self.showMessage(output: "Not Connected to Database, Check that network is 'cwgast'")
+                    }
+                }
+        }
+    }
+    /*
+     * FUNCTION: showMessage
+     * PURPOSE: Displays a pop-up with the given message
+     * PARAMS: output -> string to output
+     */
+    func showMessage(output: String)
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textButtonPopUp") as! TextPopUpViewController
+        popOverVC.message = output
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
     }
     
     /*
@@ -762,4 +854,21 @@ class batteryViewController: UIViewController, UITextFieldDelegate
         // Dispose of any resources that can be recreated.
     }
     
+}
+extension UIImage {
+    enum JPEGQuality: CGFloat {
+        case lowest  = 0
+        case low     = 0.25
+        case medium  = 0.5
+        case high    = 0.75
+        case higher  = 0.9
+        case highest = 1
+    }
+    
+    /// Returns the data for the specified image in JPEG format.
+    /// If the image object’s underlying image data has been purged, calling this function forces that data to be reloaded into memory.
+    /// - returns: A data object containing the JPEG data, or nil if there was a problem generating the data. This function may return nil if the image has no data or if the underlying CGImageRef contains data in an unsupported bitmap format.
+    func jpeg(_ quality: JPEGQuality) -> Data? {
+        return UIImageJPEGRepresentation(self, quality.rawValue)
+    }
 }

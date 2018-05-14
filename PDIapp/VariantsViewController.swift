@@ -14,16 +14,11 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     var toggle = 0
     //indicates whether pressing "X" should open or close drop down menu
     var xtoggle = 0
-    
-    //DEPRECEATED
-    //var skipToggle = 0
-    
     //holds the current machine being checked
     var machine: Machine!
     //holds the name of the individual completeing the current PDI
     var name: String!
-    //port for sending data back to database
-    //var exportDat: exportData!
+    //port for sending and recieving data data to and from the database
     var Port: port!
     //0 = VariantBank, 1 = skipped
     //indicates whether current list being traversed is variants list or skipped list
@@ -42,6 +37,8 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     let notSelected = UIImage(named: "EmptyButton") as UIImage?
     
     //Object access identifiers
+    @IBOutlet weak var checkConnectionButton: UIButton!
+    @IBOutlet weak var refreshButton: UIButton!
     @IBOutlet weak var loadingText: UILabel!
     @IBOutlet weak var thisActivity: UIActivityIndicatorView!
     @IBOutlet var loadingView: UIView!
@@ -64,7 +61,8 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var skippedButton: UIButton!
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         
         print("VariantsView Loaded")
@@ -73,6 +71,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         
         messageField.delegate = self
         
+        // Loads variants from database
         if(!Port.variantsArrayExists())
         {
             print("Variants array does not exists, loading new variants...")
@@ -84,8 +83,12 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             Port.setVariantsResponses2(cpId: "fackeId")
         }
         print("Responses Set")
+        
+        // Sets up screen visual elements
         cancelButton.isHidden = true
         saveButton.isHidden = true
+        refreshButton.isHidden = true
+        checkConnectionButton.isHidden = true
         machineLabel.text = machine.name
         nameLabel.text = name
         machine.thisPDI.thisQuestion = 0
@@ -94,21 +97,62 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         totalNumberTag.text = String(describing: machine.thisPDI.variantBank.count)
         
         print("VIEW IS LOADED")
+        // Generates first question
         let success = genQuestion()
         if(!success)
         {
             print("ERROR GENERATEING NEXT QUESTION")
         }
     }
+    /*
+     * FUNCTION: addImage
+     * PURPOSE: Opens the camera for user to attatch an image to there issue
+     */
     @IBAction func addImage(_ sender: Any)
     {
-        /*CameraHandler.shared.showActionSheet(vc: self)
-        CameraHandler.shared.imagePickedBlock = { (image) in
-            self.issueImage.image = image
-            self.thisImage = image
-            self.issueImage.isHidden = false
-        }*/
-    }
+            CameraHandler.shared.showActionSheet(vc: self)
+            CameraHandler.shared.imagePickedBlock = { (image) in
+                //self.issueImage.image = image
+                self.thisImage = image
+                self.issueImage.isHidden = false
+                self.openEditor()
+            }
+        }
+        /*
+         * FUNCTION: openEditor
+         * PURPOSE: Opens a screen with the current image displayed and access to editing tools
+         */
+        func openEditor()
+        {
+            let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "imageEditor") as! ImageEditorViewController
+            popOverVC.currentImage = self.thisImage
+            self.addChildViewController(popOverVC)
+            self.view.addSubview(popOverVC.view)
+            popOverVC.didMove(toParentViewController: self)
+            popOverVC.onEditorClosed = onEditorClosed
+        }
+        /*
+         * FUNCTION: compressImage
+         * PURPOSE: Compresses the image to reduce the size for storage
+         */
+        func compressImage(image: UIImage)
+        {
+            if let imageData = image.jpeg(.lowest)
+            {
+                print(imageData.count, "Bytes")
+                thisImage = UIImage(data: imageData)!
+            }
+        }
+        /*
+         * FUNCTION: onEditorClosed
+         * PURPOSE: Callback function called when image editor closed that updates the current image to the edited image
+         */
+        func onEditorClosed(_ image: UIImage)
+        {
+            thisImage = image
+            compressImage(image: image)
+            issueImage.image = thisImage
+        }
     /*
      * FUNCTION: touchesBegan
      * PURPOSE: Is called when touch begins
@@ -133,17 +177,25 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     @IBAction func okPressed(_ sender: Any)
     {
         print("Ok Pressed")
-        
-        if(!userInSkippedBank())
-        {
-            setResponse(atPosition: machine.thisPDI.thisQuestion, to: 1)
+        startActivity()
+        DispatchQueue.global().async {
+            
+            if(!self.userInSkippedBank())
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.thisQuestion, to: 1)
+            }
+            else
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.skippedVariantBank[self.machine.thisPDI.currentSkipped].position, to: 1)
+                self.machine.thisPDI.skippedVariantBank[self.machine.thisPDI.currentSkipped].response = 1
+            }
+            
+            DispatchQueue.main.async
+                {
+                    self.stopActivity()
+                    self.selectOk()
+            }
         }
-        else
-        {
-            setResponse(atPosition: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position, to: 1)
-            machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response = 1
-        }
-        selectOk()
     }
     /* FUNCTION: notOkPressed
      * PURPOSE: Sets response to variant to not ok
@@ -151,17 +203,25 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     @IBAction func notOkPressed(_ sender: Any)
     {
         print("Not Ok Pressed")
-        if(!userInSkippedBank())
-        {
-            setResponse(atPosition: machine.thisPDI.thisQuestion, to: 2)
+        startActivity()
+        DispatchQueue.global().async {
+            
+            if(!self.userInSkippedBank())
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.thisQuestion, to: 2)
+            }
+            else
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.skippedVariantBank[self.machine.thisPDI.currentSkipped].position, to: 2)
+                self.machine.thisPDI.skippedVariantBank[self.machine.thisPDI.currentSkipped].response = 2
+            }
+            
+            DispatchQueue.main.async
+            {
+                    self.stopActivity()
+                    self.selectNotOk()
+            }
         }
-        else
-        {
-            setResponse(atPosition: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position, to: 2)
-            machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response = 2
-        }
-        
-        selectNotOk()
     }
     /*
      * FUNCTION: togglePressed
@@ -274,7 +334,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         loadingView.bounds.size.height = view.bounds.height
         loadingView.center = view.center
         loadingView.alpha = 1
-        //self.view.backgroundColor = UIColor.blue.withAlphaComponent(0.8)
         self.view.bringSubview(toFront: loadingView)
         self.view = loadingView
         print("Loading screen succeeded")
@@ -288,13 +347,16 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         print("Next Pressed")
        if(userInSkippedBank())
        {
+            // User is in skipped bank
             print("Saving Response in Skipped bank...")
         machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].response = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
         
+        // Sets ststus in database of the question in the main bank
         Port.setQuestionStatus(status: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].response, type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].num)
         
             Port.updateSingleResponse(type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position)
         
+        // Reconfigures the skipped bank
             if(machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response != 0)
             {
                 removeFromSkipped(index: machine.thisPDI.currentSkipped)
@@ -308,12 +370,13 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
        else
        {
+            // User is in main bank
             print("Saving Response in main bank...")
             Port.setQuestionStatus(status: machine.thisPDI.variantBank[machine.thisPDI.thisQuestion].response, type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.thisQuestion].num)
             Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[machine.thisPDI.thisQuestion].num, issueType: 0)
         }
     
-        if(Port.verifyCompletion(type: 0)/*allVariantsAnswered()*/)
+        if(Port.verifyCompletion(type: 0))
         {
             print("********** ALL VARIANTS ARE ANSWERED ************")
             machine.thisPDI.noSkippedVariants = true
@@ -323,7 +386,6 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             print("********** SOME VARIANTS ARE STILL SKIPPED ************")
             machine.thisPDI.noSkippedVariants = false
         }
-        //Port.pushVariants()
         self.performSegue(withIdentifier: "variantsToCheckpoint", sender: machine)
     }
     /*
@@ -360,15 +422,13 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         self.view.addSubview(popOverVC.view)
         popOverVC.didMove(toParentViewController: self)
     }
-    /*
-     * FUNCTION: backVariantPressed
-     * PURPOSE: Gos back to previous variant
-     */
-    @IBAction func backVariantPressed(_ sender: Any)
+    func genPreviousVariant()
     {
-        print("Back Variant Pressed")
+        var loadsuccess = false
+        var setsuccess = false
         if(!userInSkippedBank())
         {
+            // User is in main bank
             let positionInMain = machine.thisPDI.thisQuestion
             decrementThisQuestion()
             
@@ -388,7 +448,8 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             
             
             
-            Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain].response, type: 0, id: machine.thisPDI.variantBank[positionInMain].num)
+            setsuccess = Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain].response, type: 0, id: machine.thisPDI.variantBank[positionInMain].num)
+            
             Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[positionInMain].num, issueType: 0)
             if(machine.thisPDI.variantBank[positionInMain].response != 0)
             {
@@ -413,14 +474,17 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         else
         {
+            // User is in skipped bank
             let positionInMain = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position
-           let thisResponse = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
+            
+            // Sets question status in database and reconfigures issue list in the database to match
+            let thisResponse = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].response
             machine.thisPDI.variantBank[positionInMain!].response = thisResponse
             
-            Port.updateSingleResponse(type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position)
+            loadsuccess = Port.updateSingleResponse(type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position)
             if(!unanswered(atPosition: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position))
             {
-                Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain!].response, type: 0, id: machine.thisPDI.variantBank[positionInMain!].num)
+                setsuccess = Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain!].response, type: 0, id: machine.thisPDI.variantBank[positionInMain!].num)
                 Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[positionInMain!].num, issueType: 0)
                 removeFromSkipped(index: machine.thisPDI.currentSkipped)
             }
@@ -432,6 +496,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
                 }
             }
             
+            // Puts user in the correct bank
             if(machine.thisPDI.currentSkipped == 0)
             {
                 switchQuestionBanks()
@@ -449,17 +514,43 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             }
             
         }
+        if(setsuccess)
+        {
+            print("Saved To Database")
+        }
+        else
+        {
+            showMessage(output: "Response could not be saved! Attempting reconnection...")
+            refresh()
+        }
+        if(loadsuccess)
+        {
+            print("Loaded response from Database")
+        }
+        else
+        {
+            showMessage(output: "Saved response could not be loaded!  Attempting reconnection...")
+            refresh()
+        }
     }
     /*
-     * FUNCTION: nextVariantPressed
-     * PURPOSE: Moves to next variant
+     * FUNCTION: backVariantPressed
+     * PURPOSE: Gos back to previous variant
      */
-    @IBAction func nextVariantPressed(_ sender: Any)
+    @IBAction func backVariantPressed(_ sender: Any)
     {
-        print("Next Variant Pressed")
-        backButton.isHidden = false
+        print("Back Variant Pressed")
+        startActivity()
+        genPreviousVariant()
+        stopActivity()
+    }
+    func genNextVariant()
+    {
+        //var loadsuccess = false
+        var setsuccess = false
         if(userInSkippedBank())
         {
+            // User is in skipped bank
             let positionInMain = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position
             if(!unanswered(atPosition: positionInMain!))
             {
@@ -468,7 +559,16 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
                     removeFromSkipped(index: machine.thisPDI.currentSkipped)
                     print("REMOVED SKIPPED VARIANT AT: ", machine.thisPDI.currentSkipped)
                 }
-                Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain!].response, type: 0, id: machine.thisPDI.variantBank[positionInMain!].num)
+                setsuccess = Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain!].response, type: 0, id: machine.thisPDI.variantBank[positionInMain!].num)
+                if(setsuccess)
+                {
+                    print("Saved To Database")
+                }
+                else
+                {
+                    showMessage(output: "Response could not be saved!  Attempting reconnection...")
+                    refresh()
+                }
                 Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[positionInMain!].num, issueType: 0)
             }
             else
@@ -483,6 +583,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         }
         else
         {
+            // User is in main bank
             let positionInMain = machine.thisPDI.thisQuestion
             if(!unanswered(atPosition: machine.thisPDI.thisQuestion))
             {
@@ -498,7 +599,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
                         }
                     }
                 }
-                Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain].response, type: 0, id: machine.thisPDI.variantBank[positionInMain].num)
+                setsuccess = Port.setQuestionStatus(status: machine.thisPDI.variantBank[positionInMain].response, type: 0, id: machine.thisPDI.variantBank[positionInMain].num)
                 Port.removeIssue(issueIdentifier: machine.thisPDI.variantBank[positionInMain].num, issueType: 0)
             }
             if(notOk(atPosition: machine.thisPDI.thisQuestion))
@@ -512,6 +613,29 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             switchQuestionBanks()
             changeType = false
         }
+        
+        if(setsuccess)
+        {
+            print("Saved To Database")
+        }
+        else
+        {
+            showMessage(output: "Response could not be saved!  Attempting reconnection...")
+            refresh()
+        }
+    }
+    /*
+     * FUNCTION: nextVariantPressed
+     * PURPOSE: Moves to next variant
+     */
+    @IBAction func nextVariantPressed(_ sender: Any)
+    {
+        print("Next Variant Pressed")
+        
+        backButton.isHidden = false
+        
+        startActivity()
+        genNextVariant()
         
         if(!userInSkippedBank())
         {
@@ -546,6 +670,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         {
             genSkippedQuestion()
         }
+        stopActivity()
     }
     /*
      * FUNCTION: genQuestion
@@ -554,6 +679,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
      */
     func genQuestion() -> Bool
     {
+        var loadsuccess = false
         print("***---------------------------------------------------------***")
         print("Generateing Question")
         
@@ -564,7 +690,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             {
                 if(machine.thisPDI.thisQuestion >= 0)
                 {
-                    Port.updateSingleResponse(type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.thisQuestion].id, index: machine.thisPDI.thisQuestion)
+                    loadsuccess = Port.updateSingleResponse(type: 0, id: machine.thisPDI.variantBank[machine.thisPDI.thisQuestion].id, index: machine.thisPDI.thisQuestion)
                 }
                 else
                 {
@@ -599,6 +725,15 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
                 nextButton.isHidden = true
                 return false
             }
+            if(loadsuccess)
+            {
+                print("Loaded response from Database")
+            }
+            else
+            {
+                showMessage(output: "Saved response could not be loaded!  Attempting reconnection...")
+                refresh()
+            }
         }
         else
         {
@@ -616,6 +751,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
      */
     func genSkippedQuestion()
     {
+        var loadsuccess = false
         print("***---------------------------------------------------------***")
         print("Generateing Skipped Question...")
         if(machine.thisPDI.skippedVariantBank.count != 0)
@@ -623,11 +759,21 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
             currentNumberTag.text = String(describing: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position + 1)
             
             let newVariant = machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].variant
-            Port.updateSingleResponse(type: 0, id: newVariant.id, index: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position)
+            loadsuccess = Port.updateSingleResponse(type: 0, id: newVariant.id, index: machine.thisPDI.skippedVariantBank[machine.thisPDI.currentSkipped].position)
             number.text = newVariant.num
             variantDescription.text = newVariant.message
             selectNone()
+            if(loadsuccess)
+            {
+                print("Loaded response from Database")
+            }
+            else
+            {
+                showMessage(output: "Saved response could not be loaded!  Attempting reconnection...")
+                refresh()
+            }
         }
+        
     }
     /*
      * FUNCTION: selectNotOk
@@ -720,13 +866,21 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         print("Jumping to: ", jumpPos)
         if(jumpPos >= 0)
         {
-            if(jumpPos < machine.thisPDI.checkpointBank.count - 1)
+            if(jumpPos < machine.thisPDI.variantBank.count - 1)
             {
                 nextButton.isHidden = false
+            }
+            else
+            {
+                nextButton.isHidden = true
             }
             if(jumpPos > 0)
             {
                 backButton.isHidden = false
+            }
+            else
+            {
+                backButton.isHidden = true
             }
             type = 0
             machine.thisPDI.currentSkipped = 0
@@ -993,17 +1147,25 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
     {
         view.bringSubview(toFront: cancelButton)
         view.bringSubview(toFront: saveButton)
+        view.bringSubview(toFront: checkConnectionButton)
+        //view.bringSubview(toFront: refreshButton)
         
         if(xtoggle == 0)
         {
+            // Menu is currently closed, opens menu
             cancelButton.isHidden = false
             saveButton.isHidden = false
+            checkConnectionButton.isHidden = false
+            //refreshButton.isHidden = false
             xtoggle = 1
         }
         else
         {
+            // Menu is currently open, hides menu
             cancelButton.isHidden = true
             saveButton.isHidden = true
+            checkConnectionButton.isHidden = true
+            //refreshButton.isHidden = true
             xtoggle = 0
         }
     }
@@ -1017,6 +1179,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         showLoadingScreen()
         loadingText.text = "Saving PDI..."
         startActivity()
+        loadingView.alpha = 1
         DispatchQueue.global().async {
             
             self.Port.setReturnPos(pos: "var")
@@ -1047,6 +1210,7 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
         showLoadingScreen()
         loadingText.text = "Canceling PDI..."
         startActivity()
+        loadingView.alpha = 1
         DispatchQueue.global().async {
             
             self.Port.removeInspected()
@@ -1056,6 +1220,50 @@ class VariantsViewController: UIViewController, UITextFieldDelegate
                 self.performSegue(withIdentifier: "variantsCancelToMain", sender: self.machine)
             }
         }
+    }
+    /*
+     * FUNCTION: checkConnectionPressed
+     * PURPOSE: Calls refresh when checkconnection button is pressed
+     */
+    @IBAction func checkConnectionPressed(_ sender: Any) {
+        refresh()
+    }
+    /*
+     * FUNCTION: refresh
+     * PURPOSE: Attempts to reconnect to the database
+     */
+    func refresh()
+    {
+        startActivity()
+        DispatchQueue.global().async
+            {
+                self.Port.reconnect()
+                DispatchQueue.main.async {
+                    self.stopActivity()
+                    
+                    if(self.Port.connected())
+                    {
+                        self.showMessage(output: "Connected to Database")
+                    }
+                    else
+                    {
+                        self.showMessage(output: "Not Connected to Database, Check that network is 'cwgast'")
+                    }
+                }
+        }
+    }
+    /*
+     * FUNCTION: showMessage
+     * PURPOSE: Displays a pop-up with the given message
+     * PARAMS: output -> string to output
+     */
+    func showMessage(output: String)
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textButtonPopUp") as! TextPopUpViewController
+        popOverVC.message = output
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
     }
     /*
      * FUNCTION: preare

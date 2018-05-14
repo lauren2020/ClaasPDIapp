@@ -20,15 +20,18 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     var toggle = 0;
     // Indicates whether close menu options should be shown or hidden
     var xtoggle = 0
-    
+    //DEPRECATED?
     var skipToggle = 0
     //indicates whether current list being traversed is checkpoints list or skipped list
     var type = 0;
     //indicates whether type should be changed for next question or not
     var changeType = false
+    // Holds the current image attatched to an issue
     var thisImage: UIImage!
     
     var thisMessage = ""
+    
+    @IBOutlet weak var checkConnectionButton: UIButton!
     
     var activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView()
     
@@ -76,6 +79,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         }
         cancelButton.isHidden = true
         saveButton.isHidden = true
+        checkConnectionButton.isHidden = true
         machineLabel.text = machine.name
         nameLabel.text = name
         machine.thisPDI.thisQuestion = 0
@@ -101,20 +105,61 @@ class PDIViewController: UIViewController, UITextFieldDelegate
             print("ERROR GENERATEING NEXT QUESTION")
         }
     }
+    /*
+     * FUNCTION: addImage
+     * PURPOSE: Opens the camera for user to attatch an image to there issue
+     */
     @IBAction func addImage(_ sender: Any)
     {
-        /*CameraHandler.shared.showActionSheet(vc: self)
+        CameraHandler.shared.showActionSheet(vc: self)
         CameraHandler.shared.imagePickedBlock = { (image) in
-            self.issueImage.image = image
+            //self.issueImage.image = image
             self.thisImage = image
             self.issueImage.isHidden = false
-        }*/
+            self.openEditor()
+        }
+    }
+    /*
+     * FUNCTION: openEditor
+     * PURPOSE: Opens a screen with the current image displayed and access to editing tools
+     */
+    func openEditor()
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "imageEditor") as! ImageEditorViewController
+        popOverVC.currentImage = self.thisImage
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+        popOverVC.onEditorClosed = onEditorClosed
+    }
+    /*
+     * FUNCTION: compressImage
+     * PURPOSE: Compresses the image to reduce the size for storage
+     */
+    func compressImage(image: UIImage)
+    {
+        if let imageData = image.jpeg(.lowest)
+        {
+            print(imageData.count, "Bytes")
+            thisImage = UIImage(data: imageData)!
+        }
+    }
+    /*
+     * FUNCTION: onEditorClosed
+     * PURPOSE: Callback function called when image editor closed that updates the current image to the edited image
+     */
+    func onEditorClosed(_ image: UIImage)
+    {
+        thisImage = image
+        compressImage(image: image)
+        issueImage.image = thisImage
     }
     /*
      * FUNCTION: touchesBegan
      * PURPOSE: Is called when touch begins
      */
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
         self.view.endEditing(true)
     }
     /*
@@ -133,6 +178,9 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     @IBAction func nextPressed(_ sender: Any)
     {
         print("Next checkpoint Pressed")
+        var setsuccess = false
+        startActivity()
+        self.view.alpha = 1
         backButton.isHidden = false
         if(userInSkippedBank())
         {
@@ -145,7 +193,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
                     removeFromSkipped(index: machine.thisPDI.currentSkipped)
                     print("REMOVED SKIPPED checkpoint AT: ", machine.thisPDI.currentSkipped)
                 }
-                Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[positionInMain!].response, type: 1, id: machine.thisPDI.checkpointBank[positionInMain!].id)
+                setsuccess = Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[positionInMain!].response, type: 1, id: machine.thisPDI.checkpointBank[positionInMain!].id)
                 Port.removeIssue(issueIdentifier: machine.thisPDI.checkpointBank[positionInMain!].id, issueType: 1)
             }
             else
@@ -154,6 +202,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
                 machine.thisPDI.skippedCheckpointBank.append(machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped])
                 removeFromSkipped(index: machine.thisPDI.currentSkipped)
             }
+            
             if(notOk(atPosition: positionInMain!))
             {
                 addIssueToDB(fromPosition: positionInMain!)
@@ -177,15 +226,17 @@ class PDIViewController: UIViewController, UITextFieldDelegate
                         }
                     }
                 }
-                Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[positionInMain].response, type: 1, id: machine.thisPDI.checkpointBank[positionInMain].id)
+                setsuccess = Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[positionInMain].response, type: 1, id: machine.thisPDI.checkpointBank[positionInMain].id)
                 Port.removeIssue(issueIdentifier: machine.thisPDI.checkpointBank[positionInMain].id, issueType: 1)
             }
+            
             if(notOk(atPosition: machine.thisPDI.thisQuestion))
             {
                 addIssueToDB(fromPosition: positionInMain)
             }
         }
         
+        // Puts user in correct question bank
         if(changeType)
         {
             switchQuestionBanks()
@@ -194,6 +245,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         
         if(!userInSkippedBank())
         {
+            // Prepares move to next question
             if(!lastQuestionIn(bank: 0, isAt: machine.thisPDI.thisQuestion))
             {
                 incrementThisQuestion()
@@ -218,12 +270,23 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         }
         else if(machine.thisPDI.skippedCheckpointBank.count == 1)
         {
+            // Moves to final skipped question
             nextButton.isHidden = true
             genSkippedQuestion()
         }
         else
         {
+            // Moves to next skipped question
             genSkippedQuestion()
+        }
+        stopActivity()
+        if(setsuccess)
+        {
+            print("Saved to Database")
+        }
+        else
+        {
+            showMessage(output: "Response could not be saved!")
         }
     }
     /*
@@ -232,6 +295,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
      */
     func genSkippedQuestion()
     {
+        var loadsuccess = false
         print("***---------------------------------------------------------***")
         print("Generateing Skipped Question")
         if(machine.thisPDI.skippedCheckpointBank.count != 0)
@@ -239,10 +303,18 @@ class PDIViewController: UIViewController, UITextFieldDelegate
             currentNumberTag.text = String(describing: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position + 1)
             
             let newCheckpoint = machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].checkpoint
-            Port.updateSingleResponse(type: 0, id: newCheckpoint!.id, index: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position)
+            loadsuccess = Port.updateSingleResponse(type: 0, id: newCheckpoint!.id, index: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position)
             positionLabel.text = newCheckpoint?.macPosition
             failureLabel.text = newCheckpoint?.failure
             selectNone()
+        }
+        if(loadsuccess)
+        {
+            print("Loaded response from Database")
+        }
+        else
+        {
+            showMessage(output: "Saved response could not be loaded!")
         }
     }
     /*
@@ -265,16 +337,6 @@ class PDIViewController: UIViewController, UITextFieldDelegate
             }
         }
         return inSkipped
-    }
-    //DEPRECEATED
-    /*
-     * FUNCTION: addToSkipped
-     * PURPOSE: Adds a new checkpoint to the skipped list and tracks the position of that variable in the checkpoint list
-     * VARIABLES: checkpoint skippedcheckpoint = checkpoint that was not answered
-     *            Int position = position of checkpoint in checkpoint list
-     */
-    func addToSkipped(skippedCheckpoint: Checkpoint, position: Int)
-    {
     }
     /*
      * FUNCTION: removeFromSkipped
@@ -316,14 +378,25 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         print("JUMPING TO: ", jumpPos)
         if(jumpPos >= 0)
         {
+            // Hides or shows back/next button based on quesiton position
             if(jumpPos < machine.thisPDI.checkpointBank.count - 1)
             {
                 nextButton.isHidden = false
+            }
+            else
+            {
+                nextButton.isHidden = true
             }
             if(jumpPos > 0)
             {
                 backButton.isHidden = false
             }
+            else
+            {
+                backButton.isHidden = true
+            }
+            
+            // Sets user position to jumpPos and generates the question
             type = 0
             machine.thisPDI.currentSkipped = 0
             machine.thisPDI.thisQuestion = jumpPos
@@ -445,9 +518,18 @@ class PDIViewController: UIViewController, UITextFieldDelegate
      */
     func setResponse(atPosition: Int, to: Int)
     {
+        var setsuccess = false
         print("Setting response at: ", atPosition, " to:", to)
         machine.thisPDI.checkpointBank[atPosition].response = to
-        Port.setQuestionStatus(status: to, type: 1, id: machine.thisPDI.checkpointBank[atPosition].id)
+        setsuccess = Port.setQuestionStatus(status: to, type: 1, id: machine.thisPDI.checkpointBank[atPosition].id)
+        if(setsuccess)
+        {
+            print("Saved to Database")
+        }
+        else
+        {
+            showMessage(output: "Response could not be saved!")
+        }
     }
     /*
      * FUNCTION: response
@@ -556,12 +638,17 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     @IBAction func backPressed(_ sender: Any)
     {
         print("Back checkpoint Pressed")
-        
+        var loadsuccess = false
+        var setsuccess = false
+        startActivity()
+        self.view.alpha = 1
         if(!userInSkippedBank())
         {
+            // User is in the main bank
             let positionInMain = machine.thisPDI.thisQuestion
             decrementThisQuestion()
             
+            // Shows or hides next/back buttons based on question position
             if((lastQuestionIn(bank: 0, isAt: machine.thisPDI.thisQuestion) && machine.thisPDI.skippedCheckpointBank.count == 0))
             {
                 nextButton.isHidden = true
@@ -575,7 +662,9 @@ class PDIViewController: UIViewController, UITextFieldDelegate
             {
                 backButton.isHidden = true
             }
-            Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[positionInMain].response, type: 1, id: machine.thisPDI.checkpointBank[positionInMain].id)
+            // Records answer and configures skipped bank
+            setsuccess = Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[positionInMain].response, type: 1, id: machine.thisPDI.checkpointBank[positionInMain].id)
+    
             Port.removeIssue(issueIdentifier: machine.thisPDI.checkpointBank[positionInMain].id, issueType: 1)
             if(machine.thisPDI.checkpointBank[positionInMain].response != 0)
             {
@@ -600,13 +689,15 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         }
         else
         {
+            // User is in skipped bank
             let positionInMain = machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position
+            //Updates the current status of the checkpoint and configures the list of issues in the database to match
             let thisResponse = machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].response
             machine.thisPDI.checkpointBank[positionInMain!].response = thisResponse
-            Port.updateSingleResponse(type: 1, id: machine.thisPDI.checkpointBank[machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position)
+            loadsuccess = Port.updateSingleResponse(type: 1, id: machine.thisPDI.checkpointBank[machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position)
             if(!unanswered(atPosition: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position))
             {
-                Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[positionInMain!].response, type: 1, id: machine.thisPDI.checkpointBank[positionInMain!].id)
+                setsuccess = Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[positionInMain!].response, type: 1, id: machine.thisPDI.checkpointBank[positionInMain!].id)
                 Port.removeIssue(issueIdentifier: machine.thisPDI.checkpointBank[positionInMain!].id, issueType: 1)
                 removeFromSkipped(index: machine.thisPDI.currentSkipped)
             }
@@ -617,7 +708,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
                     removeFromSkipped(index: machine.thisPDI.currentSkipped)
                 }
             }
-            
+            // Puts user in the proper bank
             if(machine.thisPDI.currentSkipped == 0)
             {
                 switchQuestionBanks()
@@ -635,6 +726,23 @@ class PDIViewController: UIViewController, UITextFieldDelegate
             }
             
         }
+        stopActivity()
+        if(setsuccess)
+        {
+            print("Saved To Database")
+        }
+        else
+        {
+            showMessage(output: "Response could not be saved!")
+        }
+        if(loadsuccess)
+        {
+            print("Loaded response from Database")
+        }
+        else
+        {
+            showMessage(output: "Saved response could not be loaded!")
+        }
     }
     /*
      * FUNCTION: genQuestion
@@ -644,7 +752,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     {
         print("***---------------------------------------------------------***")
         print("Generateing Quesiton...")
-        
+        var loadsuccess = false
         
         if(machine.thisPDI.checkpointBank.count != 0)
         {
@@ -654,7 +762,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
                 if(machine.thisPDI.thisQuestion >= 0)
                 {
                     print("Updateing Response...")
-                    Port.updateSingleResponse(type: 1, id: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].id, index: machine.thisPDI.thisQuestion)
+                    loadsuccess = Port.updateSingleResponse(type: 1, id: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].id, index: machine.thisPDI.thisQuestion)
                 }
                 else
                 {
@@ -695,6 +803,14 @@ class PDIViewController: UIViewController, UITextFieldDelegate
                 machine.thisPDI.thisQuestion -= 1
                 return false
             }
+            if(loadsuccess)
+            {
+                print("Loaded response from Database")
+            }
+            else
+            {
+                showMessage(output: "Saved response could not be loaded!")
+            }
         }
         else
         {
@@ -714,16 +830,26 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     @IBAction func okPressed(_ sender: Any)
     {
         print("OK PRESSED")
-        if(!userInSkippedBank())
-        {
-            setResponse(atPosition: machine.thisPDI.thisQuestion, to: 1)
+        startActivity()
+        self.view.alpha = 1
+        DispatchQueue.global().async {
+            
+            if(!self.userInSkippedBank())
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.thisQuestion, to: 1)
+            }
+            else
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.skippedCheckpointBank[self.machine.thisPDI.currentSkipped].position, to: 1)
+                self.self.machine.thisPDI.skippedCheckpointBank[self.machine.thisPDI.currentSkipped].response = 1
+            }
+            
+            DispatchQueue.main.async
+                {
+                    self.stopActivity()
+                    self.selectOk()
+            }
         }
-        else
-        {
-            setResponse(atPosition: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position, to: 1)
-            machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].response = 1
-        }
-        selectOk()
     }
     /*
      * FUNCTION: notOkPressed
@@ -732,17 +858,26 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     @IBAction func notOkPressed(_ sender: Any)
     {
         print("NOT OK PRESSED")
-        if(!userInSkippedBank())
-        {
-            setResponse(atPosition: machine.thisPDI.thisQuestion, to: 2)
+        startActivity()
+        self.view.alpha = 1
+        DispatchQueue.global().async {
+            
+            if(!self.userInSkippedBank())
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.thisQuestion, to: 2)
+            }
+            else
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.skippedCheckpointBank[self.machine.thisPDI.currentSkipped].position, to: 2)
+                self.machine.thisPDI.skippedCheckpointBank[self.machine.thisPDI.currentSkipped].response = 2
+            }
+            
+            DispatchQueue.main.async
+                {
+                    self.stopActivity()
+                    self.selectNotOk()
+            }
         }
-        else
-        {
-            setResponse(atPosition: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position, to: 2)
-            machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].response = 2
-        }
-        
-        selectNotOk()
     }
     /*
      * FUNCTION: naPressed
@@ -751,16 +886,26 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     @IBAction func naPressed(_ sender: Any)
     {
         print("NA PRESSED")
-        if(!userInSkippedBank())
-        {
-            setResponse(atPosition: machine.thisPDI.thisQuestion, to: 3)
+        startActivity()
+        self.view.alpha = 1
+        DispatchQueue.global().async {
+            
+            if(!self.userInSkippedBank())
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.thisQuestion, to: 3)
+            }
+            else
+            {
+                self.setResponse(atPosition: self.machine.thisPDI.skippedCheckpointBank[self.machine.thisPDI.currentSkipped].position, to: 3)
+                self.machine.thisPDI.skippedCheckpointBank[self.machine.thisPDI.currentSkipped].response = 3
+            }
+            
+            DispatchQueue.main.async
+                {
+                    self.stopActivity()
+                    self.selectNa()
+            }
         }
-        else
-        {
-            setResponse(atPosition: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position, to: 3)
-            machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].response = 3
-        }
-        selectNa()
     }
     /*
      * FUNCTION: selectNotOk
@@ -936,14 +1081,16 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     @IBAction func completePDI(_ sender: Any)
     {
         print("Next Pressed")
+        var setsuccess = false
+        var loadsuccess = false
         if(userInSkippedBank())
         {
             //Save Response
             machine.thisPDI.checkpointBank[machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position].response = machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].response
             
-            Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].response, type: 1, id: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].id)
+            setsuccess = Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].response, type: 1, id: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].id)
             
-            Port.updateSingleResponse(type: 1, id: machine.thisPDI.checkpointBank[machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position)
+            loadsuccess = Port.updateSingleResponse(type: 1, id: machine.thisPDI.checkpointBank[machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position].id, index: machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].position)
             if(machine.thisPDI.skippedCheckpointBank[machine.thisPDI.currentSkipped].response != 0)
             {
                 removeFromSkipped(index: machine.thisPDI.currentSkipped)
@@ -952,7 +1099,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         else
         {
             print("Saving Response in main bank...")
-            Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].response, type: 0, id: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].id)
+            setsuccess = Port.setQuestionStatus(status: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].response, type: 0, id: machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].id)
             if(machine.thisPDI.checkpointBank[machine.thisPDI.thisQuestion].response != 0 && machine.thisPDI.skippedCheckpointBank.count != 0)
             {
                 for index in 0 ..< machine.thisPDI.skippedCheckpointBank.count
@@ -963,6 +1110,22 @@ class PDIViewController: UIViewController, UITextFieldDelegate
                     }
                 }
             }
+        }
+        if(loadsuccess)
+        {
+            print("Loaded response from Database")
+        }
+        else
+        {
+            showMessage(output: "Saved response could not be loaded!")
+        }
+        if(setsuccess)
+        {
+            print("Saved to Database")
+        }
+        else
+        {
+            showMessage(output: "Response could not be saved!")
         }
         if(!machine.thisPDI.noSkippedVariants && machine.thisPDI.variantBank.count != 0)
         {
@@ -1080,18 +1243,51 @@ class PDIViewController: UIViewController, UITextFieldDelegate
     {
         view.bringSubview(toFront: cancelButton)
         view.bringSubview(toFront: saveButton)
+        view.bringSubview(toFront: checkConnectionButton)
         
         if(xtoggle == 0)
         {
             cancelButton.isHidden = false
             saveButton.isHidden = false
+            checkConnectionButton.isHidden = false
             xtoggle = 1
         }
         else
         {
             cancelButton.isHidden = true
             saveButton.isHidden = true
+            checkConnectionButton.isHidden = true
             xtoggle = 0
+        }
+    }
+    /*
+     * FUNCTION: checkConnectionPressed
+     * PURPOSE: Calls refresh when checkconnection button is pressed
+     */
+    @IBAction func checkConnectionPressed(_ sender: Any) {
+        refresh()
+    }
+    /*
+     * FUNCTION: refresh
+     * PURPOSE: Attempts to reconnect to the database
+     */
+    func refresh()
+    {
+        startActivity()
+        DispatchQueue.global().async
+            {
+                self.Port.reconnect()
+                DispatchQueue.main.async {
+                    self.stopActivity()
+                    if(self.Port.connected())
+                    {
+                        self.showMessage(output: "Connected to Database")
+                    }
+                    else
+                    {
+                        self.showMessage(output: "Not Connected to Database")
+                    }
+                }
         }
     }
     /*
@@ -1103,6 +1299,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         showLoadingScreen()
         loadingText.text = "Saving PDI..."
         startActivity()
+        loadingView.alpha = 1
         DispatchQueue.global().async {
             
             //self.saveEntries()
@@ -1134,6 +1331,7 @@ class PDIViewController: UIViewController, UITextFieldDelegate
         showLoadingScreen()
         loadingText.text = "Canceling PDI..."
         startActivity()
+        loadingView.alpha = 1
         DispatchQueue.global().async {
             
             self.Port.removeInspected()
@@ -1143,6 +1341,14 @@ class PDIViewController: UIViewController, UITextFieldDelegate
                 self.performSegue(withIdentifier: "checkpointsCancelToMain", sender: self.machine)
             }
         }
+    }
+    func showMessage(output: String)
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textButtonPopUp") as! TextPopUpViewController
+        popOverVC.message = output
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
     }
     /*
      * FUNCTION: preare

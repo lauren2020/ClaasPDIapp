@@ -26,7 +26,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     var sortedSkipArray = [SkippedCheckpoint]()
     //holds port for retrieving and assigning data to and from database
     var Port = port()
-    
+    var notInitial = true
     // URL to location of users stored name
     let docDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
     
@@ -59,8 +59,13 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     {
         super.viewDidLoad()
         
+        activityIndicator = thisActivity
+        
         //fills array with machines that have a pdiStatus of 0
-        Port.fillMachines(type: 0)
+        if(notInitial)
+        {
+            Port.fillMachines(type: 0)
+        }
         machines = Port.machineArray
         if(machines.count != 0)
         {
@@ -77,7 +82,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         {
             couldNotConnect()
         }
-        activityIndicator = thisActivity
+        //activityIndicator = thisActivity
     }
     
     func startActivity()
@@ -310,17 +315,17 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                 
                 
                 //fill variants in PDI
-                Port.fillVariantsSimple(reload: true)
+                Port.fillVariants(reload: true)
                 variantArray = Port.variantArray
                 machine.thisPDI.setVariantBank(arrayIn: variantArray)
                 
                 //***********************************THIS IS OUDATED
                 //create new object in collection "inspectedMachines"
-                Port.createInspected()
+                //Port.createInspected()
                 
                 //change status to in progress
                 Port.macStatus(status: 2)
-                let position = Port.getReturnPos(macName: machine.name)
+                let position = Port.getReturnPos()
                 //************************************THESE ARE NOT NEEDED DUE TO REFRESH ON EACH PAGE LOAD, REMOVE?
                 //load ifc
                 //load battery
@@ -388,7 +393,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                 }
                 
                 //fill variants in PDI
-                Port.fillVariantsSimple(reload: false)
+                Port.fillVariants(reload: false)
                 variantArray = Port.variantArray
                 machine.thisPDI.setVariantBank(arrayIn: variantArray)
                 machine.thisPDI.skippedVariantBank = Port.skippedVariantArray
@@ -456,17 +461,17 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                 
                 
                 //fill variants in PDI
-                self.Port.fillVariantsSimple(reload: true)
+                self.Port.fillVariants(reload: true)
                 self.variantArray = self.Port.variantArray
                 self.machine.thisPDI.setVariantBank(arrayIn: self.variantArray)
                 
                 //***********************************THIS IS OUDATED
                 //create new object in collection "inspectedMachines"
-                self.Port.createInspected()
+                //self.Port.createInspected()
                 
                 //change status to in progress
                 self.Port.macStatus(status: 2)
-                let position = self.Port.getReturnPos(macName: self.machine.name)
+                let position = self.Port.getReturnPos()
                 //************************************THESE ARE NOT NEEDED DUE TO REFRESH ON EACH PAGE LOAD, REMOVE?
                 //load ifc
                 //load battery
@@ -541,7 +546,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                 }
                 
                 //fill variants in PDI
-                self.Port.fillVariantsSimple(reload: false)
+                self.Port.fillVariants(reload: false)
                 self.variantArray = self.Port.variantArray
                 self.machine.thisPDI.setVariantBank(arrayIn: self.variantArray)
                 self.machine.thisPDI.skippedVariantBank = self.Port.skippedVariantArray
@@ -697,6 +702,18 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         print("Loading screen succeeded")
     }
     /*
+     * FUNCTION: showLoadingScreen
+     * PURPOSE: Displays the loading screen while machine settings are configuring
+     */
+    func closeLoadingScreen()
+    {
+        loadingView.isHidden = true
+        //self.view.backgroundColor = UIColor.blue.withAlphaComponent(0.8)
+        self.view.bringSubview(toFront: view)
+        self.view = view
+        print("Closing screen succeeded")
+    }
+    /*
      * FUNCTION: couldNotConnect
      * PURPOSE: Displays a pop up when connection to the database fails and prompts the user to check there network settings
      */
@@ -707,6 +724,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         self.addChildViewController(popOverVC)
         self.view.addSubview(popOverVC.view)
         popOverVC.didMove(toParentViewController: self)
+    }
+    @IBAction func returnToHome(_ sender: Any)
+    {
+        self.performSegue(withIdentifier: "pdiToHomeScreen", sender: self.machine)
     }
     
     /*

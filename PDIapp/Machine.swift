@@ -22,6 +22,7 @@ class Machine
     var configuration = [String?]()
     var po2Config = 0764
     var completedBy: String!
+    var images: [Image]!
     
     init(name: String)
     {

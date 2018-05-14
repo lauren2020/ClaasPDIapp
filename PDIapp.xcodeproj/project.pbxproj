@@ -15,6 +15,7 @@
 		800631EC206957A200AFDE76 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800631EB206957A200AFDE76 /* LoadingViewController.swift */; };
 		800631EE206957ED00AFDE76 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800631ED206957ED00AFDE76 /* LoadingView.swift */; };
 		800631F02069832400AFDE76 /* OM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800631EF2069832400AFDE76 /* OM.swift */; };
+		800C1BCA20939F6D00A3D5C4 /* ImageEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 800C1BC920939F6D00A3D5C4 /* ImageEditorViewController.swift */; };
 		80126D3C202E413600B3CFAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126D3B202E413600B3CFAB /* AppDelegate.swift */; };
 		80126D3E202E413600B3CFAB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126D3D202E413600B3CFAB /* ViewController.swift */; };
 		80126D41202E413600B3CFAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80126D3F202E413600B3CFAB /* Main.storyboard */; };
@@ -24,7 +25,7 @@
 		80126D5C202E413600B3CFAB /* PDIappUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126D5B202E413600B3CFAB /* PDIappUITests.swift */; };
 		80126D8B202E472000B3CFAB /* Machine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126D8A202E472000B3CFAB /* Machine.swift */; };
 		80126E0F202FA15B00B3CFAB /* PDIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E0E202FA15B00B3CFAB /* PDIViewController.swift */; };
-		80126E11202FA1B900B3CFAB /* FuelConsumptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E10202FA1B900B3CFAB /* FuelConsumptionViewController.swift */; };
+		80126E11202FA1B900B3CFAB /* FuelConsumptionViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E10202FA1B900B3CFAB /* FuelConsumptionViewController2.swift */; };
 		80126E13202FA23E00B3CFAB /* PDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E12202FA23E00B3CFAB /* PDI.swift */; };
 		80126E15202FA2A600B3CFAB /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E14202FA2A600B3CFAB /* Checkpoint.swift */; };
 		80126E1E2031E4F900B3CFAB /* FinalFCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80126E1D2031E4F900B3CFAB /* FinalFCViewController.swift */; };
@@ -35,6 +36,9 @@
 		801E5D462077E999000D871F /* CameraHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801E5D452077E999000D871F /* CameraHandler.swift */; };
 		801E5D4820780FFA000D871F /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801E5D4720780FFA000D871F /* ContainerViewController.swift */; };
 		801E5D4C207B9DB8000D871F /* PDIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801E5D4B207B9DB8000D871F /* PDIView.swift */; };
+		8020856C209760A000F0FC4F /* QgateHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8020856B209760A000F0FC4F /* QgateHomeViewController.swift */; };
+		8020857B20977FEA00F0FC4F /* ImagesViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8020857A20977FEA00F0FC4F /* ImagesViewerViewController.swift */; };
+		8020857D2097814B00F0FC4F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8020857C2097814B00F0FC4F /* Image.swift */; };
 		802405E5206D55BD00E35E8D /* RedesignedVariantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802405E4206D55BD00E35E8D /* RedesignedVariantsViewController.swift */; };
 		80262749203B271F00D15EF5 /* userInfo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 80262742203B271F00D15EF5 /* userInfo.txt */; };
 		802F04E5204DAC6F00824134 /* MongoKitten.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802F04D6204DAC6100824134 /* MongoKitten.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -61,6 +65,7 @@
 		807FA1DC2052F9B100A14156 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807FA1DB2052F9B100A14156 /* LaunchViewController.swift */; };
 		807FA1E0205306F200A14156 /* TextPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807FA1DF205306F200A14156 /* TextPopUpViewController.swift */; };
 		807FA1E220531ED200A14156 /* port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807FA1E120531ED200A14156 /* port.swift */; };
+		80BF9C9F2091101100DD86DC /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BF9C9E2091101100DD86DC /* HomeScreenViewController.swift */; };
 		80E235D5203DD08A0002E716 /* Variant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235D4203DD08A0002E716 /* Variant.swift */; };
 		80E235DB203E0E100002E716 /* OMViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235DA203E0E100002E716 /* OMViewController.swift */; };
 		80E235DD203E0E240002E716 /* VariantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E235DC203E0E240002E716 /* VariantsViewController.swift */; };
@@ -318,6 +323,7 @@
 		800631EB206957A200AFDE76 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		800631ED206957ED00AFDE76 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		800631EF2069832400AFDE76 /* OM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OM.swift; sourceTree = "<group>"; };
+		800C1BC920939F6D00A3D5C4 /* ImageEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEditorViewController.swift; sourceTree = "<group>"; };
 		80126D38202E413500B3CFAB /* PDIapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDIapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80126D3B202E413600B3CFAB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80126D3D202E413600B3CFAB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -333,7 +339,7 @@
 		80126D5D202E413600B3CFAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80126D8A202E472000B3CFAB /* Machine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Machine.swift; sourceTree = "<group>"; };
 		80126E0E202FA15B00B3CFAB /* PDIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDIViewController.swift; sourceTree = "<group>"; };
-		80126E10202FA1B900B3CFAB /* FuelConsumptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuelConsumptionViewController.swift; sourceTree = "<group>"; };
+		80126E10202FA1B900B3CFAB /* FuelConsumptionViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuelConsumptionViewController2.swift; sourceTree = "<group>"; };
 		80126E12202FA23E00B3CFAB /* PDI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDI.swift; sourceTree = "<group>"; };
 		80126E14202FA2A600B3CFAB /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
 		80126E1D2031E4F900B3CFAB /* FinalFCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalFCViewController.swift; sourceTree = "<group>"; };
@@ -344,6 +350,9 @@
 		801E5D452077E999000D871F /* CameraHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraHandler.swift; sourceTree = "<group>"; };
 		801E5D4720780FFA000D871F /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		801E5D4B207B9DB8000D871F /* PDIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDIView.swift; sourceTree = "<group>"; };
+		8020856B209760A000F0FC4F /* QgateHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QgateHomeViewController.swift; sourceTree = "<group>"; };
+		8020857A20977FEA00F0FC4F /* ImagesViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesViewerViewController.swift; sourceTree = "<group>"; };
+		8020857C2097814B00F0FC4F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		802405E4206D55BD00E35E8D /* RedesignedVariantsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedesignedVariantsViewController.swift; sourceTree = "<group>"; };
 		80262742203B271F00D15EF5 /* userInfo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = userInfo.txt; sourceTree = "<group>"; };
 		802F04BE204DAC6000824134 /* MKFrame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MKFrame.xcodeproj; path = MKFrame/MKFrame.xcodeproj; sourceTree = "<group>"; };
@@ -353,6 +362,7 @@
 		807FA1DB2052F9B100A14156 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		807FA1DF205306F200A14156 /* TextPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPopUpViewController.swift; sourceTree = "<group>"; };
 		807FA1E120531ED200A14156 /* port.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = port.swift; sourceTree = "<group>"; };
+		80BF9C9E2091101100DD86DC /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewController.swift; sourceTree = "<group>"; };
 		80E235D4203DD08A0002E716 /* Variant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variant.swift; sourceTree = "<group>"; };
 		80E235DA203E0E100002E716 /* OMViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMViewController.swift; sourceTree = "<group>"; };
 		80E235DC203E0E240002E716 /* VariantsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantsViewController.swift; sourceTree = "<group>"; };
@@ -427,6 +437,10 @@
 				800631D120601B2E00AFDE76 /* Issue.swift */,
 				807FA1E120531ED200A14156 /* port.swift */,
 				80126D3F202E413600B3CFAB /* Main.storyboard */,
+				8020857A20977FEA00F0FC4F /* ImagesViewerViewController.swift */,
+				8020856B209760A000F0FC4F /* QgateHomeViewController.swift */,
+				800C1BC920939F6D00A3D5C4 /* ImageEditorViewController.swift */,
+				80BF9C9E2091101100DD86DC /* HomeScreenViewController.swift */,
 				801E5D4B207B9DB8000D871F /* PDIView.swift */,
 				801E5D4720780FFA000D871F /* ContainerViewController.swift */,
 				801E5D452077E999000D871F /* CameraHandler.swift */,
@@ -447,12 +461,13 @@
 				80126E1D2031E4F900B3CFAB /* FinalFCViewController.swift */,
 				80E235DA203E0E100002E716 /* OMViewController.swift */,
 				80E235DC203E0E240002E716 /* VariantsViewController.swift */,
-				80126E10202FA1B900B3CFAB /* FuelConsumptionViewController.swift */,
+				80126E10202FA1B900B3CFAB /* FuelConsumptionViewController2.swift */,
 				80E235D4203DD08A0002E716 /* Variant.swift */,
 				80126E12202FA23E00B3CFAB /* PDI.swift */,
 				80126E14202FA2A600B3CFAB /* Checkpoint.swift */,
 				80126E0E202FA15B00B3CFAB /* PDIViewController.swift */,
 				80126D8A202E472000B3CFAB /* Machine.swift */,
+				8020857C2097814B00F0FC4F /* Image.swift */,
 				80126D42202E413600B3CFAB /* Assets.xcassets */,
 				80126D44202E413600B3CFAB /* LaunchScreen.storyboard */,
 				807FA1DB2052F9B100A14156 /* LaunchViewController.swift */,
@@ -803,12 +818,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				80E235DB203E0E100002E716 /* OMViewController.swift in Sources */,
+				8020857D2097814B00F0FC4F /* Image.swift in Sources */,
+				80BF9C9F2091101100DD86DC /* HomeScreenViewController.swift in Sources */,
 				80126E1E2031E4F900B3CFAB /* FinalFCViewController.swift in Sources */,
 				800631C3206019C500AFDE76 /* newIssuesPopUpViewController.swift in Sources */,
 				80E235DD203E0E240002E716 /* VariantsViewController.swift in Sources */,
 				805F6C042056ED8E00C34C95 /* TextEntryPopUpViewController.swift in Sources */,
 				80126D3E202E413600B3CFAB /* ViewController.swift in Sources */,
 				80126E15202FA2A600B3CFAB /* Checkpoint.swift in Sources */,
+				8020856C209760A000F0FC4F /* QgateHomeViewController.swift in Sources */,
 				800631EC206957A200AFDE76 /* LoadingViewController.swift in Sources */,
 				80EE1B7F205978D400F327C1 /* Text2ButtonPopUpViewController.swift in Sources */,
 				800631DB20657AF000AFDE76 /* SkippedVariant.swift in Sources */,
@@ -816,6 +834,7 @@
 				800631EE206957ED00AFDE76 /* LoadingView.swift in Sources */,
 				807FA1E220531ED200A14156 /* port.swift in Sources */,
 				80126E13202FA23E00B3CFAB /* PDI.swift in Sources */,
+				800C1BCA20939F6D00A3D5C4 /* ImageEditorViewController.swift in Sources */,
 				805F6BF52056BF4900C34C95 /* SkippedPopUpViewController.swift in Sources */,
 				80126D3C202E413600B3CFAB /* AppDelegate.swift in Sources */,
 				80126E0F202FA15B00B3CFAB /* PDIViewController.swift in Sources */,
@@ -828,8 +847,9 @@
 				801E5D4820780FFA000D871F /* ContainerViewController.swift in Sources */,
 				800631EA20657AFF00AFDE76 /* SkippedCheckpoint.swift in Sources */,
 				802405E5206D55BD00E35E8D /* RedesignedVariantsViewController.swift in Sources */,
-				80126E11202FA1B900B3CFAB /* FuelConsumptionViewController.swift in Sources */,
+				80126E11202FA1B900B3CFAB /* FuelConsumptionViewController2.swift in Sources */,
 				80E235D5203DD08A0002E716 /* Variant.swift in Sources */,
+				8020857B20977FEA00F0FC4F /* ImagesViewerViewController.swift in Sources */,
 				80126E202031E72D00B3CFAB /* batteryViewController.swift in Sources */,
 				807FA1DC2052F9B100A14156 /* LaunchViewController.swift in Sources */,
 				807FA1E0205306F200A14156 /* TextPopUpViewController.swift in Sources */,

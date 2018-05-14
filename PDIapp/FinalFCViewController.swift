@@ -18,12 +18,14 @@ class FinalFCViewController: UIViewController, UITextFieldDelegate
     var finalFC: Double!
     //Connection point to database
     var Port: port!
-    var override = false
-    
+    // Creates activity indicator object
     var activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView()
     
+    // Displays the current machines ID
     @IBOutlet weak var machineLabel: UILabel!
+    // Displays the current users name
     @IBOutlet weak var nameLabel: UILabel!
+    // Text field for getting final fuel consumption from user
     @IBOutlet weak var finalFCField: UITextField!
     
     
@@ -32,9 +34,11 @@ class FinalFCViewController: UIViewController, UITextFieldDelegate
 
         print("Final FC View Loaded")
         
+        // Sets return position in database
         machine.thisPDI.position = "ffc"
         
         finalFCField.delegate = self
+        
         //intializes screen elements
         machineLabel.text = machine.name
         nameLabel.text = name
@@ -87,30 +91,33 @@ class FinalFCViewController: UIViewController, UITextFieldDelegate
         }
         if (isDouble && isFilled)
         {
-            /*machine.thisPDI.setFinalFuelConsumption(fuelConsumptionIn: Double(finalFCField.text!)!)
-            //send pdi results to db
-            Port.pushFinalFuelConsumption()
-            //Set status to complete
-            Port.macStatus(status: 1)
-            self.performSegue(withIdentifier: "ffcToMain", sender: machine)
-            print("ALL DATA EXPORTED")*/
+            var successsend = false
             startActivity()
             DispatchQueue.global().async {
                 
                 self.machine.thisPDI.setFinalFuelConsumption(fuelConsumptionIn: Double(self.finalFCField.text!)!)
                 //send pdi results to db
-                self.Port.pushFinalFuelConsumption()
+                successsend = self.Port.pushFinalFuelConsumption()
                 //Set status to complete
                 self.Port.macStatus(status: 1)
                 DispatchQueue.main.async {
                     self.stopActivity()
-                    self.performSegue(withIdentifier: "ffcToMain", sender: self.machine)
-                    print("ALL DATA EXPORTED")                }
+                    if(successsend)
+                    {
+                        self.performSegue(withIdentifier: "ffcToMain", sender: self.machine)
+                        print("ALL DATA EXPORTED")
+                    }
+                    else
+                    {
+                        self.showMessage(output: "Fuel consumption could not be saved. Attempting to reconnect...")
+                        self.refresh()
+                    }
+                    }
             }
         }
         else
         {
-            //CHANGE TO POP UP OR DISPLAY LABEL, REMOVE IN FIELD ALERT
+            // Displays pop up warning that input was formatted incorrectly
             let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textButtonPopUp") as! TextPopUpViewController
             popOverVC.message = "Response must be a number"
             self.addChildViewController(popOverVC)
@@ -119,6 +126,10 @@ class FinalFCViewController: UIViewController, UITextFieldDelegate
             finalFCField.text = ""
         }
     }
+    /*
+     * FUNCTION: startActivity
+     * PURPOSE: Shows the activity indicator and stops recording user touches.
+     */
     func startActivity()
     {
         print("Activity Started")
@@ -130,6 +141,10 @@ class FinalFCViewController: UIViewController, UITextFieldDelegate
         activityIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
     }
+    /*
+     * FUNCTION: stopActivity
+     * PURPOSE: Hides the activity indicator and resumes responding to user touches
+     */
     func stopActivity()
     {
         print("Activity Stoped")
@@ -137,10 +152,42 @@ class FinalFCViewController: UIViewController, UITextFieldDelegate
         activityIndicator.stopAnimating()
         UIApplication.shared.endIgnoringInteractionEvents()
     }
-    /*func onPopOptionPressed (_ selected: Int)
+    /*
+     * FUNCTION: refresh
+     * PURPOSE: Attempts to reconnect to the database
+     */
+    func refresh()
     {
-        override = true
-    }*/
+        startActivity()
+        DispatchQueue.global().async
+            {
+                self.Port.reconnect()
+                DispatchQueue.main.async {
+                    self.stopActivity()
+                    if(self.Port.connected())
+                    {
+                        self.showMessage(output: "Connected to Database")
+                    }
+                    else
+                    {
+                        self.showMessage(output: "Not Connected to Database, Check that network is 'cwgast'")
+                    }
+                }
+        }
+    }
+    /*
+     * FUNCTION: showMessage
+     * PURPOSE: Displays a pop-up with the given message
+     * PARAMS: output -> string to output
+     */
+    func showMessage(output: String)
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textButtonPopUp") as! TextPopUpViewController
+        popOverVC.message = output
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+    }
     /*
      * FUNCTION: preare
      * PURPOSE: This function sends current machine and individuals name onto Checkpoints scene
