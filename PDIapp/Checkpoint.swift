@@ -19,10 +19,8 @@ class Checkpoint
     var type = [Int()] //Machinetype
     var id: String!
     var position = 0
-    
     var response = 0 //Unanswered
     var skipped = false
-    
     var moreInfo = "MORE INFO GOES HERE"
     var imageURL = "https://dingo.care2.com/pictures/greenliving/1407/1406075.large.jpg"
     //var imageURL = "https://lh3.google.com/u/2/d/1vxBTSi-nc5G6A4a2RhQTUKv4Tkk-EjT0=w2826-h1410-iv1"

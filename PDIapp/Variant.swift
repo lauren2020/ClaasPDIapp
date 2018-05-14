@@ -18,11 +18,8 @@ class Variant
     var message: String!
     var id = "s233jfkf345kk"
     var listPosition = 0
-    
     var response = 0 //Unanswered
     var skipped = false
-    
-    
     var moreInfo = "MORE INFO GOES HERE"
     var imageURL = "https://dingo.care2.com/pictures/greenliving/1407/1406075.large.jpg"
     

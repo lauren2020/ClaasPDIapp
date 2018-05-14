@@ -12,7 +12,11 @@ class TextEntryPopUpViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var messageField: UITextField!
     var message = ""
-    // Callback function 
+    var titleIn = "Please enter you name: "
+    // Callback function
+    var returnType = 3
+    var setUser: ((_ nameIn: String) -> ())?
+    var setMachine: ((_ macNameIn: String) -> ())?
     var onNameSet: ((_ name: String) -> ())?
     
     /*
@@ -44,13 +48,24 @@ class TextEntryPopUpViewController: UIViewController, UITextFieldDelegate {
         message = messageField.text!
         if(message != "")
         {
-            onNameSet?(message)
+            if(returnType == 0)
+            {
+                setUser!(message)
+            }
+            else if(returnType == 1)
+            {
+                setMachine!(message)
+            }
+            else
+            {
+                onNameSet?(message)
+            }
             self.view.removeFromSuperview()
         }
         else
         {
             messageField.text = ""
-            messageField.placeholder = "Please Enter Your Name"
+            messageField.placeholder = "Please Enter A Valid Name"
         }
     }
     override func didReceiveMemoryWarning() {

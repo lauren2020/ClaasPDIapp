@@ -20,16 +20,19 @@ class OMViewController: UIViewController, UITextFieldDelegate
     var machine: Machine!
     //holds the name of the individual completeing the current PDI
     var name: String!
-    //port for sending data back to database
-    //var exportDat: exportData!
+    //port for sending and recieving data to and from the database
     var Port: port!
     //indicates whether pressing "X" should open or close drop down menu
     var xtoggle = 0
     var issueNumber = 1
+    // Indicates which field is currently being manipulated
     var currentField = 0
     // Holds images user appends to a new issue
     var thisImage: UIImage!
-    
+    // Indicates how many "pages" (with 8 omms to a page) the current machines omms fill
+    var pageCount = 0;
+    // Indicates which set of omms on currently being evaluated
+    var currentPage = 0;
     // Identifys the textfield to collect "main" input
     var omMainField: UITextField!
     // Identifys the textfield to collect "supp" input
@@ -52,6 +55,8 @@ class OMViewController: UIViewController, UITextFieldDelegate
     var activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView()
     
     //Object access identifiers
+    @IBOutlet weak var checkConnectionButton: UIButton!
+    @IBOutlet weak var refreshButton: UIButton!
     @IBOutlet weak var loadingText: UILabel!
     @IBOutlet weak var thisActivity: UIActivityIndicatorView!
     @IBOutlet var loadingView: UIView!
@@ -80,6 +85,8 @@ class OMViewController: UIViewController, UITextFieldDelegate
     @IBOutlet weak var xButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var nextListButton: UIButton!
+    @IBOutlet weak var backListButton: UIButton!
     
     
     override func viewDidLoad() {
@@ -87,32 +94,18 @@ class OMViewController: UIViewController, UITextFieldDelegate
 
         print("OMView Loaded")
         
+        nextListButton.isHidden = true
+        backListButton.isHidden = true
+        
+        // Sets return position for database
         machine.thisPDI.position = "omm"
         
-        var field = [field1, field2, field3, field4, field5, field6, field7, field8]
-        var tag = [tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8]
-        
+        // Loads current OMM responses if any exist
         Port.setOMs(machine: machine, pdiCreated: true)
         
+        // Assigns all included OMMs in the current pdi to there textfields and tags
         currentField = 0
-        for om in machine.thisPDI.omBank
-        {
-            if(om.included)
-            {
-                tag[currentField]?.setTitle(om.displayName, for: .normal)
-                field[currentField]?.text = om.response
-                om.field = currentField + 1
-                currentField += 1
-            }
-        }
-        if(currentField < 8)
-        {
-            for index in currentField ..< field.count
-            {
-                field[index]?.isHidden = true
-                tag[index]?.isHidden = true
-            }
-        }
+        assignOMMs()
         
         
         field1.delegate = self
@@ -126,8 +119,11 @@ class OMViewController: UIViewController, UITextFieldDelegate
 
         messageField.delegate = self
         
+        // Sets up visual screen elements
         cancelButton.isHidden = true
         saveButton.isHidden = true
+        refreshButton.isHidden = true
+        checkConnectionButton.isHidden = true
         machineLabel.text = machine.name
         nameLabel.text = name
     }
@@ -137,24 +133,170 @@ class OMViewController: UIViewController, UITextFieldDelegate
      */
     @IBAction func addImage(_ sender: Any)
     {
-        /*CameraHandler.shared.showActionSheet(vc: self)
+        CameraHandler.shared.showActionSheet(vc: self)
         CameraHandler.shared.imagePickedBlock = { (image) in
-            self.issueImage.image = image
             self.thisImage = image
             self.issueImage.isHidden = false
-        }*/
+            self.openEditor()
+        }
+    }
+    /*
+     * FUNCTION: openEditor
+     * PURPOSE: Opens a screen with the current image displayed and access to editing tools
+     */
+    func openEditor()
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "imageEditor") as! ImageEditorViewController
+        popOverVC.currentImage = self.thisImage
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+        popOverVC.onEditorClosed = onEditorClosed
+    }
+    /*
+     * FUNCTION: compressImage
+     * PURPOSE: Compresses the image to reduce the size for storage
+     */
+    func compressImage(image: UIImage)
+    {
+        if let imageData = image.jpeg(.lowest)
+        {
+            print(imageData.count, "Bytes")
+            thisImage = UIImage(data: imageData)!
+        }
+    }
+    /*
+     * FUNCTION: onEditorClosed
+     * PURPOSE: Callback function called when image editor closed that updates the current image to the edited image
+     */
+    func onEditorClosed(_ image: UIImage)
+    {
+        thisImage = image
+        compressImage(image: image)
+        issueImage.image = thisImage
     }
     /*
      * FUNCTION: touchesBegan
      * PURPOSE: Is called when touch begins
      */
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
         self.view.endEditing(true)
     }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
+    /*
+     * FUNCTION: textFieldShouldReturn
+     * PURPOSE: When text field is done editing, resigns responder
+     */
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
         textField.resignFirstResponder()
         return true
+    }
+    /*
+     * FUNCTION: backListPage
+     * PURPOSE: Calls previous page to be loaded when back button is pressed
+     */
+    @IBAction func backListPage(_ sender: Any)
+    {
+        loadPreviousPage()
+    }
+    /*
+     * FUNCTION: nextListPage
+     * PURPOSE: Calls next page to be loaded when back button is presses
+     */
+    @IBAction func nextListPage(_ sender: Any)
+    {
+        loadNextPage()
+    }
+    /*
+     * FUNCTION: loadNextPage
+     * PURPOSE: Loads and assigns the next set of OMMs
+     */
+    func loadNextPage()
+    {
+        if(currentPage < pageCount)
+        {
+            saveEntries()
+            currentPage += 1
+            backListButton.isHidden = false
+            assignOMMs()
+        }
+        else
+        {
+            nextListButton.isHidden = true
+        }
+    }
+    /*
+     * FUNCTION: loadPreviousPage
+     * PURPOSE: Loads and assigns the previous set of OMMs
+     */
+    func loadPreviousPage()
+    {
+        if(currentPage > 0)
+        {
+            saveEntries()
+            currentPage -= 1
+            currentField = currentPage*8
+            if(currentPage == 0)
+            {
+                backListButton.isHidden = true
+            }
+            assignOMMs()
+        }
+        else
+        {
+            backListButton.isHidden = true
+        }
+    }
+    /*
+     * FUNCTION: assingOMMs
+     * PURPOSE: Assigns the text fields to the current set of omms
+     */
+    func assignOMMs()
+    {
+        // Creates an array of text fields that can be assigned to OMMs to retrieve ther values from the user
+        var field = [field1, field2, field3, field4, field5, field6, field7, field8]
+        // Creates an array of labels for each textfield that can be assigned OMMs to display there title
+        var tag = [tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8]
+        
+        
+        for index in currentField  - currentPage*8 ..< field.count
+        {
+            field[index]?.isHidden = false
+            tag[index]?.isHidden = false
+        }
+        
+        var ommsCount = 0
+        for om in machine.thisPDI.omBank
+        {
+            if(om.included && currentField - currentPage*8 < 8 && ommsCount >= currentPage*8)
+            {
+                tag[currentField  - currentPage*8]?.setTitle(om.displayName, for: .normal)
+                field[currentField  - currentPage*8]?.text = om.response
+                om.field = currentField  - currentPage*8 + 1
+                currentField += 1
+            }
+            else if(om.included && currentField - currentPage*8 >= 8 && ommsCount >= currentPage*8)
+            {
+                nextListButton.isHidden = false
+                pageCount += 1
+                break
+            }
+            if(om.included)
+            {
+                ommsCount += 1
+            }
+        }
+        // Hides any textfields that are not assigned
+        if(currentField - currentPage*8 < 8)
+        {
+            nextListButton.isHidden = true
+            for index in currentField  - currentPage*8 ..< field.count
+            {
+                field[index]?.isHidden = true
+                tag[index]?.isHidden = true
+            }
+        }
     }
     /*
      * FUNCTION: nextPressed
@@ -184,12 +326,17 @@ class OMViewController: UIViewController, UITextFieldDelegate
      */
     func saveEntries()
     {
+        var ommsCount = 0;
         for om in machine.thisPDI.omBank
         {
+            // Checks is current omm is within bounds of current view
+            if(om.included && ommsCount < currentPage*8 + 8 && ommsCount >= currentPage*8)
+            {
+                om.response = getField(fieldId: om.field).text!
+            }
             if(om.included)
             {
-                print("RESPONSE: ", getField(fieldId: om.field).text!)
-                om.response = getField(fieldId: om.field).text!
+                ommsCount += 1
             }
         }
         Port.pushOM()
@@ -315,12 +462,14 @@ class OMViewController: UIViewController, UITextFieldDelegate
         print("Toggle Pressed")
         if(toggle == 0)
         {
+            // Switches to washbay mode
             messageTitle.text = "Message to Wash Bay"
             toggleButton.setTitle("Add Issue", for: .normal)
             toggle = 1
         }
         else
         {
+            // Switches to issue mode
             messageTitle.text = "Add Issue"
             toggleButton.setTitle("Wash Bay", for: .normal)
             toggle = 0
@@ -352,11 +501,10 @@ class OMViewController: UIViewController, UITextFieldDelegate
             var identifier = "omIssueNr"
             identifier.append(String(issueNumber))
             issueNumber += 1
+            // Adds the current image to the issue
             startActivity()
             if(thisImage != nil)
             {
-                //Port.addIssue2(issueIdentifier: identifier, issue: messageField.text!, image: thisImage)
-                //thisImage = nil
                 thisMessage = messageField.text!
                 DispatchQueue.global().async {
                     
@@ -422,7 +570,6 @@ class OMViewController: UIViewController, UITextFieldDelegate
         loadingView.bounds.size.height = view.bounds.height
         loadingView.center = view.center
         loadingView.alpha = 1
-        //self.view.backgroundColor = UIColor.blue.withAlphaComponent(0.8)
         self.view.bringSubview(toFront: loadingView)
         self.view = loadingView
         print("Loading screen succeeded")
@@ -435,17 +582,25 @@ class OMViewController: UIViewController, UITextFieldDelegate
     {
         view.bringSubview(toFront: cancelButton)
         view.bringSubview(toFront: saveButton)
+        view.bringSubview(toFront: checkConnectionButton)
+        //view.bringSubview(toFront: refreshButton)
         
         if(xtoggle == 0)
         {
+            // Menu is currently closed, opens menu
             cancelButton.isHidden = false
             saveButton.isHidden = false
+            checkConnectionButton.isHidden = false
+            //refreshButton.isHidden = false
             xtoggle = 1
         }
         else
         {
+            // Menu is currently open, hides menu
             cancelButton.isHidden = true
             saveButton.isHidden = true
+            checkConnectionButton.isHidden = true
+            //refreshButton.isHidden = true
             xtoggle = 0
         }
     }
@@ -459,6 +614,7 @@ class OMViewController: UIViewController, UITextFieldDelegate
         showLoadingScreen()
         loadingText.text = "Saving PDI..."
         startActivity()
+        loadingView.alpha = 1
         DispatchQueue.global().async {
             
             self.saveEntries()
@@ -490,11 +646,11 @@ class OMViewController: UIViewController, UITextFieldDelegate
         print("Cancel Pressed")
         activityIndicator = thisActivity
         showLoadingScreen()
-        loadingText.text = "Saving PDI..."
+        loadingText.text = "Canceling PDI..."
         startActivity()
+        loadingView.alpha = 1
         DispatchQueue.global().async {
             
-            //self.saveEntries()
             self.Port.removeInspected()
             self.Port.macStatus(status: 0)
             DispatchQueue.main.async {
@@ -502,6 +658,58 @@ class OMViewController: UIViewController, UITextFieldDelegate
                 self.performSegue(withIdentifier: "omCancelToMain", sender: self.machine)
             }
         }
+    }
+    /*
+     * FUNCTION: checkConnectionPressed
+     * PURPOSE: Calls refresh when checkconnection button is pressed
+     */
+    @IBAction func checkConnectionPressed(_ sender: Any) {
+        refresh()
+        if(self.Port.connected())
+        {
+            self.showMessage(output: "Connected to Database")
+        }
+        else
+        {
+            self.showMessage(output: "Not Connected to Database")
+        }
+    }
+    /*
+     * FUNCTION: refresh
+     * PURPOSE: Attempts to reconnect to the database
+     */
+    func refresh()
+    {
+        startActivity()
+        DispatchQueue.global().async
+            {
+                self.Port.reconnect()
+                DispatchQueue.main.async {
+                    self.stopActivity()
+                    
+                    if(self.Port.connected())
+                    {
+                        self.showMessage(output: "Connected to Database")
+                    }
+                    else
+                    {
+                        self.showMessage(output: "Not Connected to Database, Check that network is 'cwgast'")
+                    }
+                }
+        }
+    }
+    /*
+     * FUNCTION: showMessage
+     * PURPOSE: Displays a pop-up with the given message
+     * PARAMS: output -> string to output
+     */
+    func showMessage(output: String)
+    {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "textButtonPopUp") as! TextPopUpViewController
+        popOverVC.message = output
+        self.addChildViewController(popOverVC)
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
     }
     /*
      * FUNCTION: preare

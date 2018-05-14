@@ -18,7 +18,6 @@ class Issue
     var issueDescription: String!
     var status = 2
     var user = "none assigned"
-    
     var image: Data!
     var imageId: String!
     
